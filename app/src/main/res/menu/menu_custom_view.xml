@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_custom1"
+        android:title="Part 1"/>
+    <item
+        android:id="@+id/action_custom2"
+        android:title="Part 2"/>
+    <item
+        android:id="@+id/action_custom3"
+        android:title="Part 3"/>
+    <item
+        android:id="@+id/action_custom4"
+        android:title="Part 4"/>
+    <item
+        android:id="@+id/action_custom5"
+        android:title="Part 5"/>
+    <item
+        android:id="@+id/action_pie"
+        android:title="Pie"/>
+</menu>
