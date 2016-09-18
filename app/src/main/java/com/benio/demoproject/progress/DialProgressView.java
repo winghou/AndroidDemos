@@ -212,9 +212,8 @@ public class DialProgressView extends View {
         int measuredWidth = resolveSizeAndState(size, widthMeasureSpec, 0);
         int measuredHeight = resolveSizeAndState(size, heightMeasureSpec, 0);
 
-        // 获取最小值作为view的确定半径
-        // 因为测量出来的width和height可能不相同，所以取最小防止view变形
-        int result = Math.min(measuredHeight, measuredWidth);
+        // 获取最大值作为view的确定半径，防止View变形
+        int result = Math.max(measuredHeight, measuredWidth);
         setMeasuredDimension(result + getPaddingLeft() + getPaddingRight(),
                 result + getPaddingTop() + getPaddingBottom());
     }
