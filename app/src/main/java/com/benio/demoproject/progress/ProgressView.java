@@ -31,7 +31,7 @@ public class ProgressView extends View {
     private Paint mReachedPaint;
     private Paint mUnreachedPaint;
     private RectF mRectF = new RectF();
-    private int mRingThickness = 18;
+    private int mThickness = 18;
     private float mStartAngle = 180;
     private float mSweepAngle = 180;
     private int mUnreachedColor = 0xFFCCCCCC;
@@ -53,6 +53,11 @@ public class ProgressView extends View {
     public ProgressView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
+        initAttr(context, attrs, defStyleAttr);
+        initPainters();
+    }
+
+    private void initAttr(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ProgressView, defStyleAttr, 0);
         if (typedArray != null) {
             int n = typedArray.getIndexCount();
@@ -76,7 +81,7 @@ public class ProgressView extends View {
                         break;
 
                     case R.styleable.ProgressView_pv_thickness:
-                        mRingThickness = typedArray.getDimensionPixelSize(attr, mRingThickness);
+                        mThickness = typedArray.getDimensionPixelSize(attr, mThickness);
                         break;
 
                     case R.styleable.ProgressView_pv_startAngle:
@@ -98,19 +103,17 @@ public class ProgressView extends View {
             }
             typedArray.recycle();
         }
-
-        initPainters();
     }
 
     private void initPainters() {
         mReachedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mReachedPaint.setStyle(Paint.Style.STROKE);
-        mReachedPaint.setStrokeWidth(mRingThickness);
+        mReachedPaint.setStrokeWidth(mThickness);
 
         mUnreachedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mUnreachedPaint.setColor(mUnreachedColor);
         mUnreachedPaint.setStyle(Paint.Style.STROKE);
-        mUnreachedPaint.setStrokeWidth(mRingThickness);
+        mUnreachedPaint.setStrokeWidth(mThickness);
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setTextSize(mTextSize);
@@ -122,8 +125,8 @@ public class ProgressView extends View {
         String text = getText();
         mTextPaint.getTextBounds(text, 0, text.length(), mTextRect);
 
-        int width = mTextRect.width() + mRingThickness * 2;
-        int height = mTextRect.height() + mRingThickness * 2;
+        int width = mTextRect.width() + mThickness * 2;
+        int height = mTextRect.height() + mThickness * 2;
 
         // 获取最大值作为view的初始
         int size = Math.max(width, height);
@@ -145,8 +148,8 @@ public class ProgressView extends View {
         // 重新计算圆周直径
         mSize = Math.min(w, h);
         // 更新矩形
-        int left = mRingThickness;
-        int top = mRingThickness;
+        int left = mThickness;
+        int top = mThickness;
         int right = mSize - left;
         int bottom = mSize - top;
         mRectF.set(left, top, right, bottom);
@@ -232,9 +235,9 @@ public class ProgressView extends View {
         }
     }
 
-    public void setRingThickness(int ringThickness) {
-        if (ringThickness > 0 && mRingThickness != ringThickness) {
-            mRingThickness = ringThickness;
+    public void setThickness(int thickness) {
+        if (thickness > 0 && mThickness != thickness) {
+            mThickness = thickness;
             invalidate();
         }
     }
@@ -301,8 +304,8 @@ public class ProgressView extends View {
         return mMaxProgress;
     }
 
-    public int getRingThickness() {
-        return mRingThickness;
+    public int getThickness() {
+        return mThickness;
     }
 
     public float getStartAngle() {

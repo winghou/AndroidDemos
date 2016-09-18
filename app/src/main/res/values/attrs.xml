@@ -11,4 +11,25 @@
         <attr name="pv_unreachedColor" format="color"/>
         <attr name="pv_textInCenter" format="boolean"/>
     </declare-styleable>
+
+    <declare-styleable name="DialProgressView">
+        <attr name="dpv_progress" format="integer"/>
+        <attr name="dpv_max" format="integer"/>
+        <attr name="dpv_startAngle" format="float"/>
+        <attr name="dpv_sweepAngle" format="float"/>
+        <attr name="dpv_thickness" format="dimension"/>
+        <attr name="dpv_textSize" format="dimension"/>
+        <attr name="dpv_textColor" format="color"/>
+        <attr name="dpv_outerRadiusThickness" format="dimension"/>
+        <attr name="dpv_outerRadiusColor" format="color"/>
+        <attr name="dpv_innerRadiusThickness" format="dimension"/>
+        <attr name="dpv_innerRadiusColor" format="color"/>
+        <attr name="dpv_markerLength" format="dimension"/>
+        <attr name="dpv_markerWidth" format="dimension"/>
+        <attr name="dpv_markerColor" format="color"/>
+        <attr name="dpv_markerStepSize" format="float"/>
+        <attr name="dpv_pointerOffset" format="dimension"/>
+        <attr name="dpv_pointer" format="reference"/>
+        <attr name="dpv_indicator" format="reference"/>
+    </declare-styleable>
 </resources>

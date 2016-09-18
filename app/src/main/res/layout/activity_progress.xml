@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/activity_progress"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_progress"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -26,8 +26,8 @@
 
     <com.benio.demoproject.progress.ProgressView
         android:id="@+id/pv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:pv_max="100"
         app:pv_progress="80"
         app:pv_startAngle="180"
@@ -38,8 +38,26 @@
         app:pv_thickness="4dp"
         app:pv_unreachedColor="@color/colorAccent"/>
 
-    <com.benio.demoproject.progress.PointerProgressView
+    <com.benio.demoproject.progress.DialProgressView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        app:dpv_indicator="@mipmap/pointer_shine_icon"
+        app:dpv_innerRadiusColor="@color/colorAccent"
+        app:dpv_innerRadiusThickness="2dp"
+        app:dpv_markerColor="#0bea30"
+        app:dpv_markerLength="5dp"
+        app:dpv_markerStepSize="20"
+        app:dpv_markerWidth="1dp"
+        app:dpv_max="100"
+        app:dpv_outerRadiusColor="@color/colorAccent"
+        app:dpv_outerRadiusThickness="3dp"
+        app:dpv_pointer="@mipmap/pointer"
+        app:dpv_pointerOffset="-6dp"
+        app:dpv_progress="60"
+        app:dpv_startAngle="135"
+        app:dpv_sweepAngle="270"
+        app:dpv_textColor="@color/colorAccent"
+        app:dpv_textSize="32sp"
+        app:dpv_thickness="10dp"/>
 
 </LinearLayout>
