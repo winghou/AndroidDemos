@@ -178,6 +178,19 @@ public class DialProgressView extends View {
     }
 
     @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mPointerBitmap != null && !mPointerBitmap.isRecycled()) {
+            mPointerBitmap.recycle();
+            mPointerBitmap = null;
+        }
+        if (mIndicatorBitmap != null && !mIndicatorBitmap.isRecycled()) {
+            mIndicatorBitmap.recycle();
+            mIndicatorBitmap = null;
+        }
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         String text = getText();
         mTextPaint.getTextBounds(text, 0, text.length(), mTextRect);
