@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ProgressView">
-        <attr name="pv_progress" format="integer"/>
-        <attr name="pv_max" format="integer"/>
+        <attr name="pv_progress" format="float"/>
+        <attr name="pv_max" format="float"/>
         <attr name="pv_textSize" format="dimension"/>
         <attr name="pv_textColor" format="color"/>
         <attr name="pv_thickness" format="dimension"/>
         <attr name="pv_startAngle" format="float"/>
         <attr name="pv_sweepAngle" format="float"/>
         <attr name="pv_unreachedColor" format="color"/>
-        <attr name="pv_textInCenter" format="boolean"/>
+        <attr name="pv_asCircle" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="DialProgressView">

@@ -19,8 +19,8 @@ import com.benio.demoproject.R;
  * Created by zhangzhibin on 2016/9/13.
  */
 public class ProgressView extends View {
-    private int mProgress = 0;
-    private int mMaxProgress = 100;
+    private float mProgress = 0;
+    private float mMaxProgress = 100;
 
     private int mTextSize = 16;
     private int mTextColor = 0xFF000000;
@@ -40,7 +40,7 @@ public class ProgressView extends View {
 
     private int mSize;
     private boolean mRefreshStartAngle = true;
-    private boolean mTextInCenter = true;
+    private boolean mAsCircle = true;
 
     public ProgressView(Context context) {
         this(context, null, 0);
@@ -65,11 +65,11 @@ public class ProgressView extends View {
                 int attr = typedArray.getIndex(i);
                 switch (attr) {
                     case R.styleable.ProgressView_pv_progress:
-                        mProgress = typedArray.getInt(attr, mProgress);
+                        mProgress = typedArray.getFloat(attr, mProgress);
                         break;
 
                     case R.styleable.ProgressView_pv_max:
-                        mMaxProgress = typedArray.getInt(attr, mMaxProgress);
+                        mMaxProgress = typedArray.getFloat(attr, mMaxProgress);
                         break;
 
                     case R.styleable.ProgressView_pv_textSize:
@@ -96,8 +96,8 @@ public class ProgressView extends View {
                         mUnreachedColor = typedArray.getColor(attr, mUnreachedColor);
                         break;
 
-                    case R.styleable.ProgressView_pv_textInCenter:
-                        mTextInCenter = typedArray.getBoolean(attr, mTextInCenter);
+                    case R.styleable.ProgressView_pv_asCircle:
+                        mAsCircle = typedArray.getBoolean(attr, mAsCircle);
                         break;
                 }
             }
@@ -136,7 +136,7 @@ public class ProgressView extends View {
         // 获取最大值作为view的确定半径，防止View变形
         int result = Math.max(measuredHeight, measuredWidth);
         setMeasuredDimension(result + getPaddingLeft() + getPaddingRight(),
-                result + getPaddingTop() + getPaddingBottom());
+                mAsCircle ? result : result / 2 + getPaddingTop() + getPaddingBottom());
     }
 
     @Override
@@ -145,7 +145,7 @@ public class ProgressView extends View {
         w -= getPaddingLeft() + getPaddingRight();
         h -= getPaddingTop() + getPaddingBottom();
         // 重新计算圆周直径
-        mSize = Math.min(w, h);
+        mSize = mAsCircle ? Math.min(w, h) : Math.max(w, h);
         // 更新矩形
         int left = mThickness;
         int top = mThickness;
@@ -165,13 +165,16 @@ public class ProgressView extends View {
         canvas.drawText(text,
                 (mSize - mTextRect.width()) / 2f,
                 // 文字位于圆中心。否则位于半圆之上
-                mTextInCenter ? (mSize + mTextRect.height()) / 2f : mSize / 2f,
+                mAsCircle ? (mSize + mTextRect.height()) / 2f : mSize / 2f,
                 mTextPaint);
 
         updateShaderAndMatrix();
 
         // Draw the arc
         float progressSweepAngle = mProgress / (float) mMaxProgress * mSweepAngle;
+        if (progressSweepAngle > mSweepAngle) {
+            progressSweepAngle = mSweepAngle;
+        }
         canvas.drawArc(mRectF, mStartAngle, progressSweepAngle, false, mReachedPaint);
         canvas.drawArc(mRectF, mStartAngle + progressSweepAngle, mSweepAngle - progressSweepAngle, false, mUnreachedPaint);
     }
@@ -220,14 +223,14 @@ public class ProgressView extends View {
         }
     }
 
-    public void setProgress(int progress) {
-        if (progress >= 0 && progress <= mMaxProgress && progress != mProgress) {
+    public void setProgress(float progress) {
+        if (progress >= 0 /*&& progress <= mMaxProgress */ && progress != mProgress) {
             mProgress = progress;
             invalidate();
         }
     }
 
-    public void setMaxProgress(int maxProgress) {
+    public void setMaxProgress(float maxProgress) {
         if (maxProgress > 0 && mMaxProgress != maxProgress) {
             mMaxProgress = maxProgress;
             invalidate();
@@ -272,17 +275,6 @@ public class ProgressView extends View {
         }
     }
 
-    public boolean isTextInCenter() {
-        return mTextInCenter;
-    }
-
-    public void setTextInCenter(boolean textInCenter) {
-        if (textInCenter != mTextInCenter) {
-            mTextInCenter = textInCenter;
-            invalidate();
-        }
-    }
-
     public String getText() {
         return mFormatter != null ? mFormatter.format(mProgress) : "";
     }
@@ -295,11 +287,11 @@ public class ProgressView extends View {
         return mFormatter;
     }
 
-    public int getProgress() {
+    public float getProgress() {
         return mProgress;
     }
 
-    public int getMaxProgress() {
+    public float getMaxProgress() {
         return mMaxProgress;
     }
 
@@ -325,5 +317,16 @@ public class ProgressView extends View {
 
     public int[] getColors() {
         return mColors;
+    }
+
+    public boolean isAsCircle() {
+        return mAsCircle;
+    }
+
+    public void setAsCircle(boolean asCircle) {
+        if (mAsCircle != asCircle) {
+            mAsCircle = asCircle;
+            invalidate();
+        }
     }
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/activity_progress"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_progress"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -26,15 +26,15 @@
 
     <com.benio.demoproject.progress.ProgressView
         android:id="@+id/pv"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:pv_asCircle="false"
         app:pv_max="100"
         app:pv_progress="80"
         app:pv_startAngle="180"
-        app:pv_sweepAngle="350"
-        app:pv_textColor="@color/colorPrimary"
-        app:pv_textInCenter="false"
-        app:pv_textSize="13sp"
+        app:pv_sweepAngle="180"
+        app:pv_textColor="@color/colorAccent"
+        app:pv_textSize="20sp"
         app:pv_thickness="4dp"
         app:pv_unreachedColor="@color/colorAccent"/>
 

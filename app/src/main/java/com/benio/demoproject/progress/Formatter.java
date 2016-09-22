@@ -14,5 +14,5 @@ public interface Formatter {
      * @return A formatted string representation.
      */
     @NonNull
-    public String format(int value);
+    public String format(float value);
 }

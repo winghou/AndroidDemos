@@ -19,8 +19,8 @@ import com.benio.demoproject.R;
  * Created by benio on 2016/9/17.
  */
 public class DialProgressView extends View {
-    private int mProgress = 0;
-    private int mMaxProgress = 100;
+    private float mProgress = 0;
+    private float mMaxProgress = 100;
 
     private float mStartAngle = 135;
     private float mSweepAngle = 270;
@@ -80,11 +80,11 @@ public class DialProgressView extends View {
                 int attr = typedArray.getIndex(i);
                 switch (attr) {
                     case R.styleable.DialProgressView_dpv_progress:
-                        mProgress = typedArray.getInt(attr, mProgress);
+                        mProgress = typedArray.getFloat(attr, mProgress);
                         break;
 
                     case R.styleable.DialProgressView_dpv_max:
-                        mMaxProgress = typedArray.getInt(attr, mMaxProgress);
+                        mMaxProgress = typedArray.getFloat(attr, mMaxProgress);
                         break;
 
                     case R.styleable.DialProgressView_dpv_startAngle:
@@ -364,11 +364,11 @@ public class DialProgressView extends View {
         return mOuterRadiusThickness;
     }
 
-    public int getProgress() {
+    public float getProgress() {
         return mProgress;
     }
 
-    public int getMaxProgress() {
+    public float getMaxProgress() {
         return mMaxProgress;
     }
 
@@ -414,14 +414,14 @@ public class DialProgressView extends View {
         }
     }
 
-    public void setProgress(int progress) {
-        if (progress >= 0 && progress <= mMaxProgress && progress != mProgress) {
+    public void setProgress(float progress) {
+        if (progress >= 0 /*&& progress <= mMaxProgress*/ && progress != mProgress) {
             mProgress = progress;
             invalidate();
         }
     }
 
-    public void setMaxProgress(int maxProgress) {
+    public void setMaxProgress(float maxProgress) {
         if (maxProgress > 0 && mMaxProgress != maxProgress) {
             mMaxProgress = maxProgress;
             invalidate();
