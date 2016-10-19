@@ -13,8 +13,8 @@
     </declare-styleable>
 
     <declare-styleable name="DialProgressView">
-        <attr name="dpv_progress" format="integer"/>
-        <attr name="dpv_max" format="integer"/>
+        <attr name="dpv_progress" format="float"/>
+        <attr name="dpv_max" format="float"/>
         <attr name="dpv_startAngle" format="float"/>
         <attr name="dpv_sweepAngle" format="float"/>
         <attr name="dpv_thickness" format="dimension"/>
