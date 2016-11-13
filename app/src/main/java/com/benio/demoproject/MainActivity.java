@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.benio.demoproject.adapterlayout.AdapterLinearLayoutActivity;
 import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.progress.ProgressActivity;
 import com.benio.demoproject.span.SpanActivity;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     DemoInfo[] mInfos = {
             new DemoInfo("CustomView", CustomViewActivity.class),
             new DemoInfo("ProgressView", ProgressActivity.class),
+            new DemoInfo("AdapterLinearLayout", AdapterLinearLayoutActivity.class),
             new DemoInfo("Span", SpanActivity.class)
     };
 

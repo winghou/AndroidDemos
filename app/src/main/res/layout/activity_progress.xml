@@ -26,7 +26,7 @@
 
     <com.benio.demoproject.progress.ProgressView
         android:id="@+id/pv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:pv_asCircle="false"
         app:pv_max="100"
@@ -39,8 +39,8 @@
         app:pv_unreachedColor="@color/colorAccent"/>
 
     <com.benio.demoproject.progress.DialProgressView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:dpv_indicator="@mipmap/pointer_shine_icon"
         app:dpv_innerRadiusColor="@color/colorAccent"
         app:dpv_innerRadiusThickness="2dp"
