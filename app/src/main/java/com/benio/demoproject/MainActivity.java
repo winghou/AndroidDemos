@@ -13,12 +13,14 @@ import android.widget.TextView;
 
 import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.progress.ProgressActivity;
+import com.benio.demoproject.span.SpanActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     DemoInfo[] mInfos = {
             new DemoInfo("CustomView", CustomViewActivity.class),
-            new DemoInfo("ProgressView", ProgressActivity.class)
+            new DemoInfo("ProgressView", ProgressActivity.class),
+            new DemoInfo("Span", SpanActivity.class)
     };
 
     @Override
