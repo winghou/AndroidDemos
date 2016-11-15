@@ -17,7 +17,7 @@ import com.benio.demoproject.R;
 public class SpanActivity extends AppCompatActivity {
 
     private TextView mTextView;
-    private static final String CONTENT = /*"Android中各种Span的用法"*/"123,456,789,asd,f,qwer";
+    private static final String CONTENT = "12b3,456,789###"/*"#1ab,456,789,asd####f,qwer"*/;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class SpanActivity extends AppCompatActivity {
 
     public void showRoundedBackgroundSpan(View view) {
         SpannableStringBuilder stringBuilder = new SpannableStringBuilder(CONTENT);
-        stringBuilder.setSpan(new RoundedBackgroundSpan(), 0, 11, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        stringBuilder.setSpan(new RoundedBackgroundSpan(Color.BLUE, 10, 10, 5), 0, CONTENT.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         mTextView.setText(stringBuilder);
     }
 }

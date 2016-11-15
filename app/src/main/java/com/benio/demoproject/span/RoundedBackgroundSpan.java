@@ -1,15 +1,17 @@
 package com.benio.demoproject.span;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.text.style.ReplacementSpan;
-import android.util.Log;
 
+/**
+ * 用于绘制格式如：123,456,789的textView背景的Span
+ * Created by benio on 2016/11/14.
+ */
 public class RoundedBackgroundSpan extends ReplacementSpan {
-    private static final String TAG = "xxxx";
+    private static final String TAG = "RoundedBackgroundSpan";
     private int mPaddingLeft;
     private int mPaddingTop;
     private int mPaddingRight;
@@ -24,14 +26,22 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
     private int mBackgroundColor;
     private int mRadius;
     private Paint mPaint;
-    private boolean[] mIsDigitArray;
-    private int mSpanWidth = -1;
 
     public RoundedBackgroundSpan() {
-        mRadius = 10;
-        mMarginLeft = mMarginRight = 8;
-        mPaddingLeft = mPaddingRight = 10;
-        mBackgroundColor = Color.YELLOW;
+        this(0, 0, 0, 0);
+    }
+
+    /**
+     * @param backgroundColor 数字的背景颜色
+     * @param radius          数字背景弧度
+     * @param padding         数字内边距
+     * @param margin          数字外边距
+     */
+    public RoundedBackgroundSpan(int backgroundColor, int radius, int padding, int margin) {
+        mRadius = radius;
+        mMarginLeft = mMarginRight = margin;
+        mPaddingLeft = mPaddingRight = padding;
+        mBackgroundColor = backgroundColor;
         mRectF = new RectF();
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(mBackgroundColor);
@@ -39,61 +49,46 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
 
     @Override
     public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
-        if (mSpanWidth < 0) {
-            String subString = text.subSequence(start, end).toString();
-            boolean[] digit = new boolean[subString.length()];
-            int horizontalPadding = mPaddingLeft + mPaddingRight;
-            int horizontalMargin = mMarginLeft + mMarginRight;
-            int digitNum = 0;
-            for (int i = start; i < end; i++) {
-                char charAt = subString.charAt(i);
-                boolean isDigit = Character.isDigit(charAt);
-                digit[i] = isDigit;
-                if (isDigit) {
-                    digitNum++;
-                }
+        // 计算text中有多少个数字
+        // 只有数字才会绘制背景
+        int digitNum = 0;
+        for (int i = start; i < end; i++) {
+            char charAt = text.charAt(i);
+            if (Character.isDigit(charAt)) {
+                digitNum++;
             }
-            mIsDigitArray = digit;
-            mSpanWidth = (int) paint.measureText(text, start, end) + digitNum * horizontalPadding + (digitNum - 1) * horizontalMargin;
         }
-        Log.d(TAG, "getSize: " + mSpanWidth + "," + start + "," + end);
-        return mSpanWidth;
+        // Span宽度 = 字体宽度 + 数字数量 * (padding + margin)
+        int width = (int) paint.measureText(text, start, end) + digitNum * (mPaddingLeft + mPaddingRight + mMarginLeft + mMarginRight);
+        //Log.d(TAG, "getSize: " + text + "," + width + "," + start + "," + end);
+        return width;
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
-        Log.d(TAG, "draw() called with: canvas = [" + canvas + "], text = [" + text + "], start = [" + start + "], end = [" + end + "], x = [" + x + "], top = [" + top + "], y = [" + y + "], bottom = [" + bottom + "], paint = [" + paint + "]");
-//        float charx = x;
-//        char[] chars = text.subSequence(start, end).toString().toCharArray();
-//        for (int i = 0; i < chars.length; i++) {
-//            final char charAt = chars[i];
-//            float charWidth = paint.measureText(chars, i, 1);
-//            mRectF.left = charx + mMarginLeft;
-//            mRectF.top = top;
-//            mRectF.right = mRectF.left + charWidth + mPaddingLeft + mPaddingRight;
-//            mRectF.bottom = bottom;
-//            if (Character.isDigit(charAt)) {
-//                canvas.drawRoundRect(mRectF, mRadius, mRadius, mPaint);
-//            } else {
-//                // 去除上一个字符多加的padding
-//                mRectF.left = charx + mMarginLeft - mPaddingLeft - mPaddingRight;
-//                mRectF.right = mRectF.left + charWidth;
-//            }
-//
-//            canvas.drawText(String.valueOf(charAt), 0, 1, mRectF.left + mPaddingLeft, y, paint);
-//            charx = mRectF.right + mMarginRight;
-//            Log.d(TAG, "draw: " + charWidth + "," + mRectF);
-//        }
-
-        String subString = text.subSequence(start, end).toString();
         float charx = x;
         for (int i = start; i < end; i++) {
+            final char charAt = text.charAt(i);
+            final String charStr = String.valueOf(charAt);
+            float charWidth = paint.measureText(charStr);
+            boolean isDigit = Character.isDigit(charAt);
 
+            // 绘制数字的背景
+            if (isDigit) {
+                mRectF.set(charx + mMarginLeft,
+                        top,
+                        charx + mMarginLeft + charWidth + mPaddingLeft + mPaddingRight,
+                        bottom);
+                canvas.drawRoundRect(mRectF, mRadius, mRadius, mPaint);
+            }
+
+            // 计算绘制字符的位置，如果是数字的话要加上padding和margin，否则忽略padding和margin
+            charx = charx + (isDigit ? mPaddingLeft + mMarginLeft : 0);
+            // 画出每个字符
+            canvas.drawText(charStr, 0, 1, charx, y, paint);
+            //Log.d(TAG, "draw: " + charAt + ", " + charWidth + ", " + charx + ", " + mRectF);
+            // 计算下一个字符的位置
+            charx = charx + charWidth + (isDigit ? mPaddingRight + mMarginRight : 0);
         }
-
-    }
-
-    private static String extractText(CharSequence text, int start, int end) {
-        return text.subSequence(start, end).toString();
     }
 }
