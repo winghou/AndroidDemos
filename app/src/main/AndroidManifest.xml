@@ -3,7 +3,7 @@
           package="com.benio.demoproject">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
@@ -26,11 +26,15 @@
         </activity>
         <activity android:name=".adapterlayout.AdapterLinearLayoutActivity">
         </activity>
+
         <receiver android:name=".boot.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
+
+        <activity android:name=".web.WebViewActivity">
+        </activity>
     </application>
 
 </manifest>

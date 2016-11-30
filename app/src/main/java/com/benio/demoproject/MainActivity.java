@@ -15,6 +15,7 @@ import com.benio.demoproject.adapterlayout.AdapterLinearLayoutActivity;
 import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.progress.ProgressActivity;
 import com.benio.demoproject.span.SpanActivity;
+import com.benio.demoproject.web.WebViewActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("CustomView", CustomViewActivity.class),
             new DemoInfo("ProgressView", ProgressActivity.class),
             new DemoInfo("AdapterLinearLayout", AdapterLinearLayoutActivity.class),
-            new DemoInfo("Span", SpanActivity.class)
+            new DemoInfo("Span", SpanActivity.class),
+            new DemoInfo("WebView", WebViewActivity.class)
     };
 
     @Override
