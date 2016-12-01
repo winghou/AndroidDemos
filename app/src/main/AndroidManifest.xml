@@ -35,6 +35,18 @@
 
         <activity android:name=".web.WebViewActivity">
         </activity>
+        <activity android:name=".web.SalesTargetActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
+                <data
+                    android:host="salestarget"
+                    android:path="/viewOrgSalesTarget"
+                    android:scheme="magapp"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

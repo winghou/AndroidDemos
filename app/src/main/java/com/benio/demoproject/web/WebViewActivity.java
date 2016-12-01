@@ -11,17 +11,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.benio.demoproject.R;
+import com.benio.demoproject.web.urlrooter.UrlInterceptor;
+import com.benio.demoproject.web.urlrooter.UrlRouterInterceptor;
 
 public class WebViewActivity extends AppCompatActivity {
     private WebView mWebView;
     private ProgressBar mProgressBar;
     private View mBadNetView;
+    private UrlInterceptor mUrlInterceptor;
 
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
         @Override
@@ -42,8 +47,8 @@ public class WebViewActivity extends AppCompatActivity {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            mReceivedError = false;
             Log.d(TAG, "onPageStarted() called with: view = [" + view + "], url = [" + url + "], favicon = [" + favicon + "]");
+            mReceivedError = false;
             showLoading();
         }
 
@@ -56,10 +61,19 @@ public class WebViewActivity extends AppCompatActivity {
         }
 
         @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            Log.d(TAG, "shouldInterceptRequest() called with: view = [" + view + "], request = [" + request + "]");
+            return super.shouldInterceptRequest(view, request);
+        }
+
+        @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             Log.d(TAG, "shouldOverrideUrlLoading() called with: view = [" + view + "], url = [" + url + "]");
+            if (mUrlInterceptor.intercept(url)) {
+                return true;
+            }
             view.loadUrl(url);
-            return true;
+            return false;
         }
 
         @Override
@@ -85,9 +99,15 @@ public class WebViewActivity extends AppCompatActivity {
         mWebView = (WebView) findViewById(R.id.web);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_web);
 
+        mUrlInterceptor = new UrlRouterInterceptor(this);
         initWebView(mWebView);
-        String url = "http://www.baidu.com1";
-        mWebView.loadUrl(url);
+        String html = "<html>\n" +
+                "\t<body>\n" +
+                "\t<a href=\"http://www.baidu.com\">baidu</a>\n" +
+                "\t<a href=\"magapp://salestarget/viewOrgSalesTarget?orgId=100&orgName=name&orgType=2&date=2016-12-01\">伪协议</a>\n" +
+                "\t</body>\n" +
+                "</html>";
+        mWebView.loadDataWithBaseURL(null, html, "text/html", "utf-8", null);
     }
 
     private void initWebView(WebView webView) {
