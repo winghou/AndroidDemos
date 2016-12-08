@@ -47,6 +47,17 @@
                     android:scheme="magapp"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".share.ShareTextResultActivity"
+            android:launchMode="singleInstance">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.ycf.pda"/>
+
+                <action android:name="android.intent.action.SEND"/>
+                <data android:mimeType="text/plain"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
