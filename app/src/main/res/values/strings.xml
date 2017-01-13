@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">DemoProject</string>
+    <string name="btn_confirm">确认</string>
+    <string name="btn_cancel">取消</string>
+    <string name="error_ssl_cert_invalid">该网站的安全证书存在问题（可能由于设备系统时间不正确导致，请先校准设备系统时间）</string>
+    <string name="label_warning">安全警告</string>
 </resources>

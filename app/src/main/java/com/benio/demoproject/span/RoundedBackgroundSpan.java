@@ -2,9 +2,11 @@ package com.benio.demoproject.span;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.text.style.ReplacementSpan;
+import android.util.Log;
 
 /**
  * 用于绘制格式如：123,456,789的textView背景的Span
@@ -26,6 +28,7 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
     private int mBackgroundColor;
     private int mRadius;
     private Paint mPaint;
+    private Rect mTextRect;
 
     public RoundedBackgroundSpan() {
         this(0, 0, 0, 0);
@@ -39,12 +42,13 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
      */
     public RoundedBackgroundSpan(int backgroundColor, int radius, int padding, int margin) {
         mRadius = radius;
-        mMarginLeft = mMarginRight = margin;
-        mPaddingLeft = mPaddingRight = padding;
+        mMarginLeft = mMarginRight = mMarginTop = mMarginBottom = margin;
+        mPaddingLeft = mPaddingRight = mPaddingTop = mPaddingBottom = padding;
         mBackgroundColor = backgroundColor;
         mRectF = new RectF();
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(mBackgroundColor);
+        mTextRect = new Rect();
     }
 
     @Override
@@ -58,14 +62,23 @@ public class RoundedBackgroundSpan extends ReplacementSpan {
                 digitNum++;
             }
         }
+        paint.getTextBounds(text.toString(), start, end, mTextRect);
         // Span宽度 = 字体宽度 + 数字数量 * (padding + margin)
-        int width = (int) paint.measureText(text, start, end) + digitNum * (mPaddingLeft + mPaddingRight + mMarginLeft + mMarginRight);
-        //Log.d(TAG, "getSize: " + text + "," + width + "," + start + "," + end);
+        int width = mTextRect.width() + digitNum * (mPaddingLeft + mPaddingRight + mMarginLeft + mMarginRight);
+        Log.i(TAG, "getSize() called with:" + "text = [" + text + "], start = [" + start + "], end = [" + end + "]" + fm);
+        if (fm != null) {
+            fm.ascent = -mTextRect.height();
+            fm.descent = mTextRect.bottom;
+            fm.top = fm.ascent;
+            fm.bottom = fm.descent;
+        }
+        Log.i(TAG, "fm:" + fm + "," + mTextRect.width() + "," + mTextRect.height() + ", " + mTextRect);
         return width;
     }
 
     @Override
     public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, @NonNull Paint paint) {
+        Log.i(TAG, "draw() called with : text = [" + text + "], start = [" + start + "], end = [" + end + "], x = [" + x + "], top = [" + top + "], y = [" + y + "], bottom = [" + bottom + "]" + paint.getFontMetricsInt());
         float charx = x;
         for (int i = start; i < end; i++) {
             final char charAt = text.charAt(i);
