@@ -37,6 +37,7 @@ public class WebViewActivity extends AppCompatActivity {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             Log.d(TAG, "onProgressChanged() called with: view = [" + view + "], newProgress = [" + newProgress + "]");
+            mProgressBar.setVisibility(View.VISIBLE);
             mProgressBar.setProgress(newProgress);
         }
 
@@ -106,7 +107,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            super.onReceivedSslError(view, handler, error);
+            Log.d(TAG, "onReceivedSslError() called with: view = [" + view + "], handler = [" + handler + "], error = [" + error + "]");
             showSslError(handler, error);
         }
 
