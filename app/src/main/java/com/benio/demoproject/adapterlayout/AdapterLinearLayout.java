@@ -17,6 +17,18 @@ public class AdapterLinearLayout extends LinearLayoutCompat {
     private BaseAdapter mAdapter;
     private DataSetObserver mObserver;
 
+    private class AdapterDataSetObserver extends DataSetObserver {
+        @Override
+        public void onChanged() {
+            reloadChildViews();
+        }
+
+        @Override
+        public void onInvalidated() {
+            reloadChildViews();
+        }
+    }
+
     public AdapterLinearLayout(Context context) {
         super(context);
     }
@@ -36,6 +48,19 @@ public class AdapterLinearLayout extends LinearLayoutCompat {
     public void setAdapter(BaseAdapter adapter) {
         setAdapterInternal(adapter);
         reloadChildViews();
+    }
+
+    private void setAdapterInternal(BaseAdapter adapter) {
+        if (mAdapter != null && mObserver != null) {
+            mAdapter.unregisterDataSetObserver(mObserver);
+        }
+        this.mAdapter = adapter;
+        if (adapter != null) {
+            if (mObserver == null) {
+                mObserver = new AdapterDataSetObserver();
+            }
+            adapter.registerDataSetObserver(mObserver);
+        }
     }
 
     private void reloadChildViews() {
@@ -59,36 +84,21 @@ public class AdapterLinearLayout extends LinearLayoutCompat {
         }
     }
 
-    private void setAdapterInternal(BaseAdapter adapter) {
-        unRegisterObserver();
-        this.mAdapter = adapter;
-        if (adapter != null) {
-            if (mObserver == null) {
-                mObserver = new DataSetObserver() {
-                    @Override
-                    public void onChanged() {
-                        reloadChildViews();
-                    }
-
-                    @Override
-                    public void onInvalidated() {
-                        reloadChildViews();
-                    }
-                };
-            }
-            adapter.registerDataSetObserver(mObserver);
-        }
-    }
-
-    private void unRegisterObserver() {
-        if (mAdapter != null && mObserver != null) {
-            mAdapter.unregisterDataSetObserver(mObserver);
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        if (mAdapter != null && mObserver == null) {
+            mObserver = new AdapterDataSetObserver();
+            mAdapter.registerDataSetObserver(mObserver);
         }
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        unRegisterObserver();
+        if (mAdapter != null && mObserver != null) {
+            mAdapter.unregisterDataSetObserver(mObserver);
+        }
+        mObserver = null;
     }
 }
