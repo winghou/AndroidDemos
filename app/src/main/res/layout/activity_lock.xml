@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_lock"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#5f5aed"
+    android:orientation="vertical"
     tools:context="com.benio.demoproject.gesturelock.LockActivity">
+
+    <com.benio.demoproject.gesturelock.LockPatternView
+        android:id="@+id/indicator"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        app:lpv_dotSize="7dp"
+        app:lpv_pathWidth="2dp"
+        app:lpv_successColor="#22ea18"/>
 
     <com.benio.demoproject.gesturelock.LockPatternView
         android:id="@+id/lock"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:enabled="false"
+        app:lpv_successColor="#22ea18"/>
 </LinearLayout>

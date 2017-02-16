@@ -45,5 +45,11 @@
         <attr name="lpv_errorColor" format="color|reference"/>
         <!-- The success color -->
         <attr name="lpv_successColor" format="color|reference"/>
+
+        <attr name="lpv_dotSize" format="dimension|reference"/>
+
+        <attr name="lpv_activeDotSize" format="dimension|reference"/>
+
+        <attr name="lpv_pathWidth" format="dimension|reference"/>
     </declare-styleable>
 </resources>

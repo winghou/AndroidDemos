@@ -288,12 +288,15 @@ public class LockPatternView extends View {
         mPathPaint.setStrokeJoin(Paint.Join.ROUND);
         mPathPaint.setStrokeCap(Paint.Cap.ROUND);
 
-        mPathWidth = getResources().getDimensionPixelSize(R.dimen.lock_pattern_dot_line_width);
+        int pathWidth = resources.getDimensionPixelSize(R.dimen.lock_pattern_dot_line_width);
+        mPathWidth = a.getDimensionPixelSize(R.styleable.LockPatternView_lpv_pathWidth, pathWidth);
         mPathPaint.setStrokeWidth(mPathWidth);
 
-        mDotSize = getResources().getDimensionPixelSize(R.dimen.lock_pattern_dot_size);
-        mDotSizeActivated = getResources().getDimensionPixelSize(
-                R.dimen.lock_pattern_dot_size_activated);
+        int dotSize = resources.getDimensionPixelSize(R.dimen.lock_pattern_dot_size);
+        mDotSize = a.getDimensionPixelSize(R.styleable.LockPatternView_lpv_dotSize, dotSize);
+
+        int activeDotSize = resources.getDimensionPixelSize(R.dimen.lock_pattern_dot_size_activated);
+        mDotSizeActivated = a.getDimensionPixelSize(R.styleable.LockPatternView_lpv_activeDotSize, activeDotSize);
 
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
