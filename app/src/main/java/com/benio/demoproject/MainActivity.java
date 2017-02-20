@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.benio.demoproject.adapterlayout.AdapterLinearLayoutActivity;
 import com.benio.demoproject.customview.CustomViewActivity;
+import com.benio.demoproject.fingerprint.FingerprintActivity;
 import com.benio.demoproject.gesturelock.LockActivity;
 import com.benio.demoproject.progress.ProgressActivity;
 import com.benio.demoproject.share.ShareTextResultActivity;
@@ -28,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("Span", SpanActivity.class),
             new DemoInfo("WebView", WebViewActivity.class),
             new DemoInfo("ShareText", ShareTextResultActivity.class),
-            new DemoInfo("LockPatternView", LockActivity.class)
+            new DemoInfo("LockPatternView", LockActivity.class),
+            new DemoInfo("Fingerprint", FingerprintActivity.class)
     };
 
     @Override
