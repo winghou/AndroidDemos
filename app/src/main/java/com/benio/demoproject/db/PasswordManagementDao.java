@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 /**
  * Created by zhangzhibin on 2017/2/27.
  */
 public class PasswordManagementDao extends PasswordManagementHelper implements PasswordManagementContract {
+    private static final String KEY = "91c5bRcX5SSUAZ8x";
     private PasswordManagement mPasswordManagement;
     private long mId;
 
@@ -21,6 +23,7 @@ public class PasswordManagementDao extends PasswordManagementHelper implements P
         mPasswordManagement = query(userId);
         if (mPasswordManagement == null) {
             mPasswordManagement = new PasswordManagement();
+            mPasswordManagement.setUserId(userId);
         }
     }
 
@@ -126,12 +129,17 @@ public class PasswordManagementDao extends PasswordManagementHelper implements P
         update(mPasswordManagement);
     }
 
-    private String decrypt(String str) {
+    private static String decrypt(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            str = Des3Util.decode(KEY, str);
+        }
         return str;
     }
 
-    private String encrypt(String str) {
+    private static String encrypt(String str) {
+        if (!TextUtils.isEmpty(str)) {
+            str = Des3Util.encode(KEY, str);
+        }
         return str;
     }
-
 }

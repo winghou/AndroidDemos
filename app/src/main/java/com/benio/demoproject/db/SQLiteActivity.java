@@ -53,17 +53,13 @@ public class SQLiteActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void showData() {
-        PasswordManagement passwordManagement = mPasswordManagementDao.query(mUserId);
-        if (passwordManagement == null) {
-            passwordManagement = new PasswordManagement();
-            passwordManagement.setUserId(mUserId);
-        }
+        PasswordManagementContract passwordManagement = mPasswordManagementDao;
         boolean gestureEnable = passwordManagement.isGestureEnable();
         boolean fingerprintEnable = passwordManagement.isFingerprintEnable();
         mDataView.setText("gesture:" + gestureEnable
                 + "\nfingerprint:" + fingerprintEnable
-                + "\npwd:" + passwordManagement.getGesturePassword()
-                + "\nuserId:" + passwordManagement.getUserId());
+                + "\npwd:" + mPasswordManagementDao.getGesturePassword()
+                + "\nuserId:" + mUserId);
         setCheckedWithoutNotifyListener(mGestureSwitch, gestureEnable);
         setCheckedWithoutNotifyListener(mFingerprintSwitch, fingerprintEnable);
     }

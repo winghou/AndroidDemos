@@ -9,10 +9,10 @@ public interface PasswordManagementContract {
 
     interface Entry extends BaseColumns {
         String TABLE_NAME = "password";
-        String COLUMN_NAME_USER_ID = "userId";
+        String COLUMN_NAME_USER_ID = "user_id";
         String COLUMN_NAME_GESTURE_ENABLE = "gesture";
         String COLUMN_NAME_FINGERPRINT_ENABLE = "fingerprint";
-        String COLUMN_NAME_GESTURE_PASSWORD = "gesturePwd";
+        String COLUMN_NAME_GESTURE_PASSWORD = "gesture_pwd";
     }
 
     void setGestureEnable(boolean enable);
