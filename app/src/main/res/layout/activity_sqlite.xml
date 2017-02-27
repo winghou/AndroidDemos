@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_sqlite"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.benio.demoproject.db.SQLiteActivity">
+
+    <Switch
+        android:id="@+id/switch_gesture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开启手势"
+        android:textOff="关闭手势"/>
+
+    <Switch
+        android:id="@+id/switch_fingerprint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开启指纹"
+        android:textOff="关闭指纹"/>
+
+    <Button
+        android:id="@+id/btn_change_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="更换用户"/>
+
+    <Button
+        android:id="@+id/btn_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="查询"/>
+
+    <TextView
+        android:id="@+id/tv_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</LinearLayout>
