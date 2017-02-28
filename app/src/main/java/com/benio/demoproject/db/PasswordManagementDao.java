@@ -11,15 +11,27 @@ import android.text.TextUtils;
  */
 public class PasswordManagementDao extends PasswordManagementHelper implements PasswordManagementContract {
     private static final String KEY = "91c5bRcX5SSUAZ8x";
+    private static PasswordManagementDao sInstance;
     private PasswordManagement mPasswordManagement;
     private long mId;
 
+    public static PasswordManagementDao getInstance(Context context) {
+        if (sInstance == null) {
+            sInstance = new PasswordManagementDao(context);
+        }
+        return sInstance;
+    }
+
     public PasswordManagementDao(Context context) {
-        this(context, 0);
+        super(context);
     }
 
     public PasswordManagementDao(Context context, int userId) {
         super(context);
+        setUserId(userId);
+    }
+
+    public void setUserId(int userId) {
         mPasswordManagement = query(userId);
         if (mPasswordManagement == null) {
             mPasswordManagement = new PasswordManagement();
@@ -27,7 +39,7 @@ public class PasswordManagementDao extends PasswordManagementHelper implements P
         }
     }
 
-    public PasswordManagement query(int userId) {
+    private PasswordManagement query(int userId) {
         PasswordManagement result = null;
         Cursor cursor = null;
         try {

@@ -27,8 +27,14 @@ public class FingerprintPasswordPresenter implements FingerprintPasswordContract
     public void start() {
         if (isFingerprintAuthAvailable()) {
             mView.showAuthenticating();
-            if (mCryptoObjectCreator == null) {
-                mCryptoObjectCreator = new CryptoObjectCreator();
+            try {
+                if (mCryptoObjectCreator == null) {
+                    mCryptoObjectCreator = new CryptoObjectCreator();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                mView.showAuthFailure();
+                return;
             }
             if (mFingerprintAuthHelper == null) {
                 mFingerprintAuthHelper = new FingerprintAuthHelper(mFingerprintManager, new FingerprintAuthHelper.Callback() {
@@ -43,7 +49,12 @@ public class FingerprintPasswordPresenter implements FingerprintPasswordContract
                     }
                 });
             }
-            mFingerprintAuthHelper.startListening(mCryptoObjectCreator.getCryptoObject());
+            try {
+                mFingerprintAuthHelper.startListening(mCryptoObjectCreator.getCryptoObject());
+            } catch (Exception e) {
+                e.printStackTrace();
+                mView.showAuthFailure();
+            }
         }
     }
 
@@ -56,7 +67,13 @@ public class FingerprintPasswordPresenter implements FingerprintPasswordContract
 
     @Override
     public boolean isFingerprintAuthAvailable() {
-        if (!mFingerprintManager.isHardwareDetected()) {
+        boolean isHardwareDetected = false;
+        try {
+            isHardwareDetected = mFingerprintManager.isHardwareDetected();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!isHardwareDetected) {
             mView.showNoHardwareDetected();
             return false;
         }
@@ -67,7 +84,13 @@ public class FingerprintPasswordPresenter implements FingerprintPasswordContract
             return false;
         }
 
-        if (!mFingerprintManager.hasEnrolledFingerprints()) {
+        boolean hasEnrolledFingerprints = false;
+        try {
+            hasEnrolledFingerprints = mFingerprintManager.hasEnrolledFingerprints();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!hasEnrolledFingerprints) {
             mView.showNoEnrolledFingerprints();
             return false;
         }
