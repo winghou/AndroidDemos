@@ -7,18 +7,10 @@ public class FingerprintAuthHelper extends FingerprintManagerCompat.Authenticati
     private boolean mSelfCancelled;
     private CancellationSignal mCancellationSignal;
     private final FingerprintManagerCompat mFingerprintManager;
-    private Callback mCallback;
+    private FingerprintManagerCompat.AuthenticationCallback mCallback;
 
-    public interface Callback {
-
-        void onAuthenticated();
-
-        void onError();
-    }
-
-    public FingerprintAuthHelper(FingerprintManagerCompat fingerprintManager, Callback callback) {
+    public FingerprintAuthHelper(FingerprintManagerCompat fingerprintManager) {
         mFingerprintManager = fingerprintManager;
-        mCallback = callback;
     }
 
     public boolean isFingerprintAuthAvailable() {
@@ -28,10 +20,11 @@ public class FingerprintAuthHelper extends FingerprintManagerCompat.Authenticati
                 && mFingerprintManager.hasEnrolledFingerprints();
     }
 
-    public void startListening(FingerprintManagerCompat.CryptoObject cryptoObject) {
+    public void startListening(FingerprintManagerCompat.CryptoObject cryptoObject, FingerprintManagerCompat.AuthenticationCallback callback) {
         if (!isFingerprintAuthAvailable()) {
             return;
         }
+        mCallback = callback;
         mCancellationSignal = new CancellationSignal();
         mSelfCancelled = false;
         // The line below prevents the false positive inspection from Android Studio
@@ -45,35 +38,36 @@ public class FingerprintAuthHelper extends FingerprintManagerCompat.Authenticati
             mCancellationSignal.cancel();
             mCancellationSignal = null;
         }
+        mCallback = null;
     }
 
+    // 多次指纹密码验证错误后，进入此方法；并且，不能短时间内调用指纹验证,一般间隔从几秒到几十秒不等
+    // 这种情况不建议重试，建议提示用户用其他的方式解锁或者认证
     @Override
     public void onAuthenticationError(int errMsgId, CharSequence errString) {
         if (!mSelfCancelled) {
-            notifyAuthError();
+            mCallback.onAuthenticationError(errMsgId, errString);
         }
     }
 
     @Override
     public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-        notifyAuthError();
+        if (mCallback != null) {
+            mCallback.onAuthenticationHelp(helpMsgId, helpString);
+        }
     }
 
     @Override
     public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
         if (mCallback != null) {
-            mCallback.onAuthenticated();
+            mCallback.onAuthenticationSucceeded(result);
         }
     }
 
     @Override
     public void onAuthenticationFailed() {
-        notifyAuthError();
-    }
-
-    private void notifyAuthError() {
         if (mCallback != null) {
-            mCallback.onError();
+            mCallback.onAuthenticationFailed();
         }
     }
 }

@@ -13,4 +13,15 @@
     <string name="lockscreen_access_pattern_cell_added">Cell added</string>
     <!-- Accessibility description sent when user completes drawing a pattern. [CHAR LIMIT=NONE] -->
     <string name="lockscreen_access_pattern_detected">Pattern completed</string>
+
+    <string name="msg_no_enrolled_fingerprints">请先录入指纹</string>
+    <string name="msg_open_keyguard">请先开启屏幕锁</string>
+    <string name="msg_open_fingerprint_permission">请先开启指纹权限</string>
+    <string name="error_open_fingerprint_password">此设备不支持指纹解锁</string>
+    <string name="label_touch_home_to_unlock">通过Home键验证已有指纹</string>
+    <string name="label_use_touch_id_for_mag">将TOUCH ID用于【要出发管理后台】</string>
+    <string name="try_again">再试一次</string>
+    <string name="msg_authenticating">认证中...</string>
+    <string name="msg_authenticate_success">认证成功</string>
+    <string name="msg_authenticate_failure">认证失败</string>
 </resources>
