@@ -1,6 +1,8 @@
 package com.benio.demoproject.fingerprint;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -24,15 +26,41 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
      * 验证类型
      */
     public static final int TYPE_VALIDATE = 1 << 1;
+    private static final long RESET_DELAY_MILLIS = 900;
     private static final long ERROR_TIMEOUT_MILLIS = 1600;
     private static final long SUCCESS_DELAY_MILLIS = 1300;
     private static final long FAILURE_DELAY_MILLIS = 800;
-    private Runnable mResetErrorTextRunnable = new Runnable() {
+    private static final int MESSAGE_RESET = 1;
+    private static final int MESSAGE_ERROR = 1 << 1;
+    private static final int MESSAGE_SUCCESS = 1 << 2;
+    private static final int MESSAGE_FAILURE = 1 << 3;
+
+    private Handler mHandler = new Handler() {
         @Override
-        public void run() {
-            mStageView.setText(R.string.label_use_touch_id_for_mag);
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MESSAGE_RESET:
+                    mStageView.setText(R.string.label_use_touch_id_for_mag);
+                    break;
+                case MESSAGE_SUCCESS:
+                    if (mAuthCallback != null) {
+                        mAuthCallback.onAuthSuccess();
+                    }
+                    break;
+                case MESSAGE_FAILURE:
+                    if (mAuthCallback != null) {
+                        mAuthCallback.onAuthFailure();
+                    }
+                    break;
+                case MESSAGE_ERROR:
+                    // 收到Error后关闭对话框
+                    dismiss();
+                    break;
+
+            }
         }
     };
+
     private TextView mStageView;
     private View mValidateLoginPwdView;
     private FingerprintContract.Presenter mPresenter;
@@ -84,6 +112,15 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mHandler.removeMessages(MESSAGE_ERROR);
+        mHandler.removeMessages(MESSAGE_FAILURE);
+        mHandler.removeMessages(MESSAGE_SUCCESS);
+        mHandler.removeMessages(MESSAGE_RESET);
+    }
+
     public void setAuthCallback(AuthCallback authCallback) {
         mAuthCallback = authCallback;
     }
@@ -119,38 +156,25 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
 
     @Override
     public void showAuthSuccess() {
-        mStageView.removeCallbacks(mResetErrorTextRunnable);
         mStageView.setText(R.string.msg_authenticate_success);
-        mStageView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mAuthCallback != null) {
-                    mAuthCallback.onAuthSuccess();
-                }
-            }
-        }, SUCCESS_DELAY_MILLIS);
+        mHandler.removeMessages(MESSAGE_SUCCESS);
+        mHandler.sendEmptyMessageDelayed(MESSAGE_SUCCESS, SUCCESS_DELAY_MILLIS);
     }
 
     @Override
     public void showAuthFailure() {
         showError(getString(R.string.try_again));
-        mStageView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mAuthCallback != null) {
-                    mAuthCallback.onAuthFailure();
-                }
-            }
-        }, FAILURE_DELAY_MILLIS);
         showValidateLoginPwdView(mType);
+        mHandler.removeMessages(MESSAGE_FAILURE);
+        mHandler.sendEmptyMessageDelayed(MESSAGE_FAILURE, FAILURE_DELAY_MILLIS);
     }
 
     private void showError(CharSequence error) {
         if (!TextUtils.isEmpty(error)) {
             mStageView.setText(error);
         }
-        mStageView.removeCallbacks(mResetErrorTextRunnable);
-        mStageView.postDelayed(mResetErrorTextRunnable, ERROR_TIMEOUT_MILLIS);
+        mHandler.removeMessages(MESSAGE_RESET);
+        mHandler.sendEmptyMessageDelayed(MESSAGE_RESET, RESET_DELAY_MILLIS);
     }
 
     @Override
@@ -163,14 +187,8 @@ public class FingerprintAuthenticationDialogFragment extends DialogFragment
         if (!TextUtils.isEmpty(errString)) {
             mStageView.setText(errString);
         }
-        mStageView.removeCallbacks(mResetErrorTextRunnable);
-        mStageView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // 收到Error后关闭对话框
-                dismiss();
-            }
-        }, ERROR_TIMEOUT_MILLIS);
+        mHandler.removeMessages(MESSAGE_ERROR);
+        mHandler.sendEmptyMessageDelayed(MESSAGE_ERROR, ERROR_TIMEOUT_MILLIS);
     }
 
     @Override
