@@ -16,6 +16,7 @@ import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.db.SQLiteActivity;
 import com.benio.demoproject.fingerprint.FingerprintActivity;
 import com.benio.demoproject.gesturelock.LockActivity;
+import com.benio.demoproject.pinnedsection.PinnedSectionActivity;
 import com.benio.demoproject.progress.ProgressActivity;
 import com.benio.demoproject.share.ShareTextResultActivity;
 import com.benio.demoproject.span.SpanActivity;
@@ -32,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("ShareText", ShareTextResultActivity.class),
             new DemoInfo("LockPatternView", LockActivity.class),
             new DemoInfo("Fingerprint", FingerprintActivity.class),
-            new DemoInfo("SQLite", SQLiteActivity.class)
+            new DemoInfo("SQLite", SQLiteActivity.class),
+            new DemoInfo("PinnedSection", PinnedSectionActivity.class)
     };
 
     @Override

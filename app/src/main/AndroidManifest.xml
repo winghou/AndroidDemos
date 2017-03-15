@@ -67,6 +67,8 @@
         </activity>
         <activity android:name=".db.SQLiteActivity">
         </activity>
+        <activity android:name=".pinnedsection.PinnedSectionActivity">
+        </activity>
     </application>
 
 </manifest>
