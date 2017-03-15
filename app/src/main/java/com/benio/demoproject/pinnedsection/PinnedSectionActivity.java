@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.benio.demoproject.R;
 
@@ -52,6 +54,14 @@ public class PinnedSectionActivity extends AppCompatActivity {
         mAdapter = new MyAdapter();
         mAdapter.addAll(generateData());
         listView.setAdapter(mAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object obj = mAdapter.getItem(position);
+                Toast.makeText(PinnedSectionActivity.this, "section:" + mAdapter.isSectionHeader(position)
+                        + "pos:" + position + ", obj:" + obj, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private List<CharSequence> generateData() {
@@ -125,8 +135,8 @@ public class PinnedSectionActivity extends AppCompatActivity {
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
-            Object data = getItem(section, 0);
-            viewHolder.mTextView.setText(data.toString().substring(0, 1));
+            Object data = getKey(section);
+            viewHolder.mTextView.setText(data.toString());
             viewHolder.mTextView.setBackgroundColor(Color.GREEN);
             return convertView;
         }

@@ -18,6 +18,10 @@ public abstract class BaseSectionAdapter<T> extends PinnedSectionAdapter {
 
     @Override
     public Object getItem(int section, int position) {
+        // position of section is -1, just return the key.
+        if (position == -1) {
+            return getKey(section);
+        }
         List<T> list = mData.get(section);
         return list != null ? list.get(position) : null;
     }
@@ -64,6 +68,10 @@ public abstract class BaseSectionAdapter<T> extends PinnedSectionAdapter {
             }
         }
         return true;
+    }
+
+    public Object getKey(int section) {
+        return mKeyList.get(section);
     }
 
     /**
