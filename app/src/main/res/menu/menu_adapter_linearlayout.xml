@@ -6,5 +6,10 @@
     <item
         android:id="@+id/del"
         android:title="Del"/>
-
+    <item
+        android:id="@+id/grid"
+        android:title="Grid"/>
+    <item
+        android:id="@+id/linear"
+        android:title="linear"/>
 </menu>

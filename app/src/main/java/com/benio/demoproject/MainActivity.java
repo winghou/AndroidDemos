@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.benio.demoproject.adapterlayout.AdapterLinearLayoutActivity;
+import com.benio.demoproject.adapterlayout.AdapterLayoutActivity;
 import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.db.SQLiteActivity;
 import com.benio.demoproject.fingerprint.FingerprintActivity;
@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     DemoInfo[] mInfos = {
             new DemoInfo("CustomView", CustomViewActivity.class),
             new DemoInfo("ProgressView", ProgressActivity.class),
-            new DemoInfo("AdapterLinearLayout", AdapterLinearLayoutActivity.class),
+            new DemoInfo("AdapterLinearLayout", AdapterLayoutActivity.class),
             new DemoInfo("Span", SpanActivity.class),
             new DemoInfo("WebView", WebViewActivity.class),
             new DemoInfo("ShareText", ShareTextResultActivity.class),

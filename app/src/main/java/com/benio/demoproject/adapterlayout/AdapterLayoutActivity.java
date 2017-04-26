@@ -1,13 +1,17 @@
 package com.benio.demoproject.adapterlayout;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.benio.demoproject.R;
@@ -15,26 +19,41 @@ import com.benio.demoproject.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdapterLinearLayoutActivity extends AppCompatActivity {
+public class AdapterLayoutActivity extends AppCompatActivity {
     private static final String TAG = "Adapter";
     private MyAdapter mAdapter;
+    private ScrollView mContainerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_adapter_linear_layout);
-
+        setContentView(R.layout.activity_adapter_layout);
+        mContainerView = (ScrollView) findViewById(R.id.scrollView);
         int size = 50;
         List<String> data = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             data.add(String.valueOf(i));
         }
-
-        AdapterLinearLayout linearLayout = (AdapterLinearLayout) findViewById(R.id.list);
         mAdapter = new MyAdapter(data);
-        linearLayout.setAdapter(mAdapter);
+
+        showLinear();
     }
 
+    private void showLinear() {
+        AdapterLinearLayout linearLayout = new AdapterLinearLayout(this);
+        linearLayout.setOrientation(LinearLayoutCompat.VERTICAL);
+        linearLayout.setAdapter(mAdapter);
+        mContainerView.removeAllViews();
+        mContainerView.addView(linearLayout);
+    }
+
+    private void showGrid() {
+        AdapterGridLayout gridLayout = new AdapterGridLayout(this);
+        gridLayout.setColumnCount(2);
+        gridLayout.setAdapter(mAdapter);
+        mContainerView.removeAllViews();
+        mContainerView.addView(gridLayout);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -52,6 +71,12 @@ public class AdapterLinearLayoutActivity extends AppCompatActivity {
         } else if (id == R.id.del) {
             mAdapter.delete(0);
             mAdapter.notifyDataSetChanged();
+            return true;
+        } else if (id == R.id.linear) {
+            showLinear();
+            return true;
+        } else if (id == R.id.grid) {
+            showGrid();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -91,11 +116,27 @@ public class AdapterLinearLayoutActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             Log.d(TAG, "getView: " + position);
-            TextView textView = new TextView(parent.getContext());
-            textView.setTextSize(20);
-            textView.setPadding(10, 10, 10, 10);
-            textView.setText(mData.get(position));
-            return textView;
+            ViewHolder viewHolder = null;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_adapter_layout, parent, false);
+                viewHolder = new ViewHolder(convertView);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+            viewHolder.mTextView.setText(mData.get(position));
+            viewHolder.itemView.setBackgroundColor(position % 2 == 0 ? Color.TRANSPARENT : Color.BLUE);
+            return convertView;
+        }
+    }
+
+    private static class ViewHolder {
+        public final View itemView;
+        TextView mTextView;
+
+        public ViewHolder(View itemView) {
+            this.itemView = itemView;
+            this.mTextView = (TextView) itemView.findViewById(R.id.tv_adapter_layout);
         }
     }
 }

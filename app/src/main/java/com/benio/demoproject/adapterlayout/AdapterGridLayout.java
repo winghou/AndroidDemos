@@ -2,18 +2,16 @@ package com.benio.demoproject.adapterlayout;
 
 import android.content.Context;
 import android.database.DataSetObserver;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.GridLayout;
 
 /**
- * LinearLayout for {@link android.widget.BaseAdapter}
- * Created by zhangzhibin on 2016/10/19.
+ * Created by benio on 2017/3/12.
  */
-public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterView<Adapter>{
-
+public class AdapterGridLayout extends GridLayout implements AdapterView<Adapter> {
     private Adapter mAdapter;
     private DataSetObserver mObserver;
 
@@ -29,15 +27,15 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
         }
     }
 
-    public AdapterLinearLayout(Context context) {
+    public AdapterGridLayout(Context context) {
         super(context);
     }
 
-    public AdapterLinearLayout(Context context, AttributeSet attrs) {
+    public AdapterGridLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AdapterLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public AdapterGridLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

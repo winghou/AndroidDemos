@@ -1,5 +1,7 @@
 package com.benio.demoproject.fingerprint;
 
+import com.benio.demoproject.common.BaseView;
+
 /**
  * Created by zhangzhibin on 2017/3/8.
  */
