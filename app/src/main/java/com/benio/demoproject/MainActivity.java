@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     DemoInfo[] mInfos = {
             new DemoInfo("CustomView", CustomViewActivity.class),
             new DemoInfo("ProgressView", ProgressActivity.class),
-            new DemoInfo("AdapterLinearLayout", AdapterLayoutActivity.class),
+            new DemoInfo("AdapterLayout", AdapterLayoutActivity.class),
             new DemoInfo("Span", SpanActivity.class),
             new DemoInfo("WebView", WebViewActivity.class),
             new DemoInfo("ShareText", ShareTextResultActivity.class),

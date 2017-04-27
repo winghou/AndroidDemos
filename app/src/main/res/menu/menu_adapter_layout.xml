@@ -11,5 +11,5 @@
         android:title="Grid"/>
     <item
         android:id="@+id/linear"
-        android:title="linear"/>
+        android:title="Linear"/>
 </menu>

@@ -1,10 +1,9 @@
 package com.benio.demoproject.adapterlayout;
 
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,8 +34,7 @@ public class AdapterLayoutActivity extends AppCompatActivity {
             data.add(String.valueOf(i));
         }
         mAdapter = new MyAdapter(data);
-
-        showLinear();
+        showGrid();
     }
 
     private void showLinear() {
@@ -49,7 +47,8 @@ public class AdapterLayoutActivity extends AppCompatActivity {
 
     private void showGrid() {
         AdapterGridLayout gridLayout = new AdapterGridLayout(this);
-        gridLayout.setColumnCount(2);
+        gridLayout.setColumnCount(3);
+        gridLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
         gridLayout.setAdapter(mAdapter);
         mContainerView.removeAllViews();
         mContainerView.addView(gridLayout);
@@ -57,7 +56,7 @@ public class AdapterLayoutActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_adapter_linearlayout, menu);
+        getMenuInflater().inflate(R.menu.menu_adapter_layout, menu);
         return true;
     }
 
@@ -115,7 +114,6 @@ public class AdapterLayoutActivity extends AppCompatActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            Log.d(TAG, "getView: " + position);
             ViewHolder viewHolder = null;
             if (convertView == null) {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_adapter_layout, parent, false);
@@ -125,7 +123,6 @@ public class AdapterLayoutActivity extends AppCompatActivity {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
             viewHolder.mTextView.setText(mData.get(position));
-            viewHolder.itemView.setBackgroundColor(position % 2 == 0 ? Color.TRANSPARENT : Color.BLUE);
             return convertView;
         }
     }

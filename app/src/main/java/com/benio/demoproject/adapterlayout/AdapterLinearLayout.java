@@ -2,20 +2,23 @@ package com.benio.demoproject.adapterlayout;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
+import android.view.accessibility.AccessibilityEvent;
+import android.widget.ListAdapter;
 
 /**
  * LinearLayout for {@link android.widget.BaseAdapter}
  * Created by zhangzhibin on 2016/10/19.
  */
-public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterView<Adapter>{
-
-    private Adapter mAdapter;
+public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterView<ListAdapter> {
+    private ListAdapter mAdapter;
     private DataSetObserver mObserver;
+    private OnItemClickListener mOnItemClickListener;
 
     private class AdapterDataSetObserver extends DataSetObserver {
         @Override
@@ -41,16 +44,41 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
         super(context, attrs, defStyleAttr);
     }
 
-    public Adapter getAdapter() {
+    public void setOnItemClickListener(@Nullable OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    @Nullable
+    public final OnItemClickListener getOnItemClickListener() {
+        return mOnItemClickListener;
+    }
+
+    public boolean performItemClick(View view, int position, long id) {
+        final boolean result;
+        if (mOnItemClickListener != null) {
+            playSoundEffect(SoundEffectConstants.CLICK);
+            mOnItemClickListener.onItemClick(this, view, position, id);
+            result = true;
+        } else {
+            result = false;
+        }
+
+        if (view != null) {
+            view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
+        }
+        return result;
+    }
+
+    public ListAdapter getAdapter() {
         return mAdapter;
     }
 
-    public void setAdapter(Adapter adapter) {
+    public void setAdapter(ListAdapter adapter) {
         setAdapterInternal(adapter);
         reloadChildViews();
     }
 
-    private void setAdapterInternal(Adapter adapter) {
+    private void setAdapterInternal(ListAdapter adapter) {
         if (mAdapter != null && mObserver != null) {
             mAdapter.unregisterDataSetObserver(mObserver);
         }
@@ -80,6 +108,9 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
                     params = generateDefaultLayoutParams();
                 }
                 addViewInLayout(child, -1, params, true);
+                if (mAdapter.areAllItemsEnabled() || mAdapter.isEnabled(i)) {
+                    child.setOnClickListener(new InternalOnClickListener(i));
+                }
             }
         }
     }
@@ -100,5 +131,22 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
             mAdapter.unregisterDataSetObserver(mObserver);
         }
         mObserver = null;
+    }
+
+    private class InternalOnClickListener implements OnClickListener {
+
+        int mPosition;
+
+        public InternalOnClickListener(int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if ((mOnItemClickListener != null) && (mAdapter != null)) {
+                mOnItemClickListener.onItemClick(AdapterLinearLayout.this, v,
+                        mPosition, mAdapter.getItemId(mPosition));
+            }
+        }
     }
 }

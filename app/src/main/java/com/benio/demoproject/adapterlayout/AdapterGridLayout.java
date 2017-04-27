@@ -2,18 +2,25 @@ package com.benio.demoproject.adapterlayout;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayout;
 import android.util.AttributeSet;
+import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.GridLayout;
+import android.view.accessibility.AccessibilityEvent;
+import android.widget.ListAdapter;
 
 /**
  * Created by benio on 2017/3/12.
  */
-public class AdapterGridLayout extends GridLayout implements AdapterView<Adapter> {
-    private Adapter mAdapter;
+public class AdapterGridLayout extends GridLayout implements AdapterView<ListAdapter> {
+    private ListAdapter mAdapter;
     private DataSetObserver mObserver;
+    private OnItemClickListener mOnItemClickListener;
+    private Drawable mDivider;
 
     private class AdapterDataSetObserver extends DataSetObserver {
         @Override
@@ -39,16 +46,41 @@ public class AdapterGridLayout extends GridLayout implements AdapterView<Adapter
         super(context, attrs, defStyleAttr);
     }
 
-    public Adapter getAdapter() {
+    public void setOnItemClickListener(@Nullable OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    @Nullable
+    public final OnItemClickListener getOnItemClickListener() {
+        return mOnItemClickListener;
+    }
+
+    public boolean performItemClick(View view, int position, long id) {
+        final boolean result;
+        if (mOnItemClickListener != null) {
+            playSoundEffect(SoundEffectConstants.CLICK);
+            mOnItemClickListener.onItemClick(this, view, position, id);
+            result = true;
+        } else {
+            result = false;
+        }
+
+        if (view != null) {
+            view.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
+        }
+        return result;
+    }
+
+    public ListAdapter getAdapter() {
         return mAdapter;
     }
 
-    public void setAdapter(Adapter adapter) {
+    public void setAdapter(ListAdapter adapter) {
         setAdapterInternal(adapter);
         reloadChildViews();
     }
 
-    private void setAdapterInternal(Adapter adapter) {
+    private void setAdapterInternal(ListAdapter adapter) {
         if (mAdapter != null && mObserver != null) {
             mAdapter.unregisterDataSetObserver(mObserver);
         }
@@ -78,6 +110,9 @@ public class AdapterGridLayout extends GridLayout implements AdapterView<Adapter
                     params = generateDefaultLayoutParams();
                 }
                 addViewInLayout(child, -1, params, true);
+                if (mAdapter.areAllItemsEnabled() || mAdapter.isEnabled(i)) {
+                    child.setOnClickListener(new InternalOnClickListener(i));
+                }
             }
         }
     }
@@ -98,5 +133,89 @@ public class AdapterGridLayout extends GridLayout implements AdapterView<Adapter
             mAdapter.unregisterDataSetObserver(mObserver);
         }
         mObserver = null;
+    }
+
+
+    public void setDividerDrawable(Drawable divider) {
+        if (divider == mDivider) {
+            return;
+        }
+        mDivider = divider;
+        setWillNotDraw(divider == null);
+        requestLayout();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (mDivider == null) {
+            return;
+        }
+        drawDividersVertical(canvas);
+        drawDividersHorizontal(canvas);
+    }
+
+    private static int resolveLayoutMargin(int margin) {
+        return margin == UNDEFINED ? 0 : margin;
+    }
+
+    private void drawDividersVertical(Canvas canvas) {
+        final int count = getChildCount();
+        final int columnCount = getColumnCount();
+        final int rowCount = getRowCount();
+        for (int i = 0; i < count; i++) {
+            // 如果是最后一行，则不需要绘制底部分隔符
+            if (i / columnCount >= rowCount - 1) {
+                break;
+            }
+            final View child = getChildAt(i);
+            if (child != null && child.getVisibility() != GONE) {
+                final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                final int left = child.getLeft() - resolveLayoutMargin(lp.leftMargin);
+                final int right = child.getRight() + resolveLayoutMargin(lp.rightMargin);
+                final int top = child.getBottom() + resolveLayoutMargin(lp.bottomMargin);
+                final int bottom = top + mDivider.getIntrinsicHeight();
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(canvas);
+            }
+        }
+    }
+
+    private void drawDividersHorizontal(Canvas canvas) {
+        final int count = getChildCount();
+        final int columnCount = getColumnCount();
+        for (int i = 0; i < count; i++) {
+            // 如果是最后一列，则不需要绘制右边
+            if ((i + 1) % columnCount == 0) {
+                continue;
+            }
+            final View child = getChildAt(i);
+            if (child != null && child.getVisibility() != GONE) {
+                final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                final int left = child.getRight() + resolveLayoutMargin(lp.rightMargin);
+                final int right = left + mDivider.getIntrinsicWidth();
+                final int top = child.getTop() + resolveLayoutMargin(lp.topMargin);
+                final int bottom = child.getBottom() + resolveLayoutMargin(lp.bottomMargin);
+                mDivider.setBounds(left, top, right, bottom);
+                mDivider.draw(canvas);
+            }
+        }
+    }
+
+    private class InternalOnClickListener implements OnClickListener {
+
+        int mPosition;
+
+        public InternalOnClickListener(int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+            if ((mOnItemClickListener != null) && (mAdapter != null)) {
+                mOnItemClickListener.onItemClick(AdapterGridLayout.this, v,
+                        mPosition, mAdapter.getItemId(mPosition));
+            }
+        }
     }
 }
