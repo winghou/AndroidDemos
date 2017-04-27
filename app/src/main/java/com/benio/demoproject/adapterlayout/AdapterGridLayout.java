@@ -1,6 +1,7 @@
 package com.benio.demoproject.adapterlayout;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListAdapter;
+
+import com.benio.demoproject.R;
 
 /**
  * Created by benio on 2017/3/12.
@@ -36,14 +39,26 @@ public class AdapterGridLayout extends GridLayout implements AdapterView<ListAda
 
     public AdapterGridLayout(Context context) {
         super(context);
+        init(context, null);
     }
 
     public AdapterGridLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context, attrs);
     }
 
     public AdapterGridLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AdapterGridLayout);
+        try {
+            setDividerDrawable(a.getDrawable(R.styleable.AdapterGridLayout_divider));
+        } finally {
+            a.recycle();
+        }
     }
 
     public void setOnItemClickListener(@Nullable OnItemClickListener listener) {

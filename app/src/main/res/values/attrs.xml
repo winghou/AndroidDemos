@@ -52,4 +52,8 @@
 
         <attr name="lpv_pathWidth" format="dimension|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="AdapterGridLayout">
+        <attr name="divider"/>
+    </declare-styleable>
 </resources>

@@ -5,6 +5,7 @@
           android:id="@+id/tv_adapter_layout"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:gravity="center"
           android:textSize="18sp"
           app:layout_columnWeight="1"
           tools:text="hello">

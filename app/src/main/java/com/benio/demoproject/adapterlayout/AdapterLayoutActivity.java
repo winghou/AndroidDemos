@@ -9,11 +9,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.benio.demoproject.R;
+import com.benio.demoproject.common.ViewHolder;
+import com.benio.demoproject.common.ViewHolderAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +82,7 @@ public class AdapterLayoutActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private static class MyAdapter extends BaseAdapter {
+    private static class MyAdapter extends ViewHolderAdapter {
 
         private List<String> mData;
 
@@ -113,27 +114,15 @@ public class AdapterLayoutActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder = null;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_adapter_layout, parent, false);
-                viewHolder = new ViewHolder(convertView);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            viewHolder.mTextView.setText(mData.get(position));
-            return convertView;
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_adapter_layout, parent, false);
+            return new ViewHolder(itemView);
         }
-    }
 
-    private static class ViewHolder {
-        public final View itemView;
-        TextView mTextView;
-
-        public ViewHolder(View itemView) {
-            this.itemView = itemView;
-            this.mTextView = (TextView) itemView.findViewById(R.id.tv_adapter_layout);
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            TextView textView = (TextView) holder.itemView;
+            textView.setText(mData.get(position));
         }
     }
 }

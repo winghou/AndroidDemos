@@ -12,6 +12,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.benio.demoproject.adapterlayout.AdapterLayoutActivity;
+import com.benio.demoproject.common.ViewHolder;
+import com.benio.demoproject.common.ViewHolderAdapter;
 import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.db.SQLiteActivity;
 import com.benio.demoproject.fingerprint.FingerprintActivity;
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static class MyAdapter extends BaseAdapter {
+    private static class MyAdapter extends ViewHolderAdapter {
         private DemoInfo[] mInfos;
 
         public MyAdapter(DemoInfo[] infos) {
@@ -87,16 +89,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            TextView textView = null;
-            if (convertView == null) {
-                textView = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
-            } else {
-                textView = (TextView) convertView;
-            }
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_main, parent, false);
+            return new ViewHolder(itemView);
+        }
 
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            TextView textView = (TextView) holder.itemView;
             textView.setText(mInfos[position].title);
-            return textView;
         }
     }
 }
