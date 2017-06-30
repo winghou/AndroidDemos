@@ -56,4 +56,18 @@
     <declare-styleable name="AdapterGridLayout">
         <attr name="divider"/>
     </declare-styleable>
+
+    <declare-styleable name="TimelineView">
+        <attr name="tl_lineWidth" format="dimension|reference"/>
+        <attr name="tl_lineColor" format="color|reference"/>
+        <attr name="tl_indicatorSize" format="dimension|reference"/>
+        <attr name="tl_indicatorColor" format="color|reference"/>
+        <attr name="tl_indicatorPadding" format="dimension|reference"/>
+        <attr name="tl_lineStyle" format="enum">
+            <enum name="both" value="0"/>
+            <enum name="top" value="1"/>
+            <enum name="bottom" value="2"/>
+            <enum name="none" value="-1"/>
+        </attr>
+    </declare-styleable>
 </resources>

@@ -4,6 +4,7 @@ import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.SectionIndexer;
 
 import de.halfbit.pinnedsection.PinnedSectionListView;
 
@@ -11,7 +12,8 @@ import de.halfbit.pinnedsection.PinnedSectionListView;
  * https://github.com/JimiSmith/PinnedHeaderListView/blob/master/library/src/za/co/immedia/pinnedheaderlistview/SectionedBaseAdapter.java
  * Created by zhangzhibin on 2017/3/2.
  */
-public abstract class PinnedSectionAdapter extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter {
+public abstract class PinnedSectionAdapter extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter,
+        SectionIndexer {
     private static int HEADER_VIEW_TYPE = 0;
     private static int ITEM_VIEW_TYPE = 0;
 
@@ -110,6 +112,19 @@ public abstract class PinnedSectionAdapter extends BaseAdapter implements Pinned
     @Override
     public final int getViewTypeCount() {
         return getItemViewTypeCount() + getSectionHeaderViewTypeCount();
+    }
+
+    @Override
+    public final int getPositionForSection(int sectionIndex) {
+        int pos = 0;
+        for (int i = 0; i < internalGetSectionCount(); i++) {
+            if (sectionIndex == i) {
+                break;
+            }
+            pos += internalGetCountForSection(i);
+            pos++; // for the header view
+        }
+        return pos;
     }
 
     public final int getSectionForPosition(int position) {

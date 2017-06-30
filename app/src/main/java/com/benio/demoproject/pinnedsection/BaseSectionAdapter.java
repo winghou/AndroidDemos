@@ -1,5 +1,6 @@
 package com.benio.demoproject.pinnedsection;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -93,5 +94,46 @@ public abstract class BaseSectionAdapter<T> extends PinnedSectionAdapter {
     public void clear() {
         mData.clear();
         mKeyList.clear();
+    }
+
+    public int getSection(Object key) {
+        return mKeyList.indexOf(key);
+    }
+
+    @Override
+    public Object[] getSections() {
+        return mKeyList.toArray();
+    }
+
+    public boolean addAll(List<? extends T> data, KeyCreator<T> keyCreator) {
+        if (keyCreator == null
+                || data == null || data.isEmpty()) {
+            return false;
+        }
+
+        List<T> sectionList = null;
+        Object sectionKey = null;
+        for (int i = 0, count = data.size(); i < count; i++) {
+            T item = data.get(i);
+            if (sectionList == null) {
+                sectionList = new ArrayList<>();
+            }
+            sectionList.add(item);
+
+            // 判断前一项与后一项sectionKey是否相同，不同则分组
+            sectionKey = keyCreator.getKey(item);
+            if (i + 1 >= count) { // 最后一项，将剩余的添加
+                add(sectionKey, sectionList);
+            } else if (!sectionKey.equals(keyCreator.getKey(data.get(i + 1)))) {
+                add(sectionKey, sectionList);
+                // 另开分组
+                sectionList = null;
+            }
+        }
+        return true;
+    }
+
+    public interface KeyCreator<T> {
+        Object getKey(T item);
     }
 }

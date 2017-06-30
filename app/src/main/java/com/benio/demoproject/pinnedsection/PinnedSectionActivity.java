@@ -75,39 +75,22 @@ public class PinnedSectionActivity extends AppCompatActivity {
     }
 
     private static class MyAdapter extends BaseSectionAdapter<CharSequence> {
+        private KeyCreator<CharSequence> mKeyCreator = new KeyCreator<CharSequence>() {
+            @Override
+            public Object getKey(CharSequence item) {
+                return item.charAt(0);
+            }
+        };
 
         public void add(CharSequence charSequence) {
             List<CharSequence> list = new ArrayList<>(1);
             list.add(charSequence);
             addAll(list);
-        }
-
-        public void addAll(List<CharSequence> list) {
-            generateDataSet(list);
             notifyDataSetChanged();
         }
 
-        private void generateDataSet(List<CharSequence> list) {
-            List<CharSequence> sectionList = null;
-            Object sectionKey = null;
-            for (int i = 0, count = list.size(); i < count; i++) {
-                CharSequence item = list.get(i);
-                if (sectionList == null) {
-                    sectionList = new ArrayList<>();
-                }
-                sectionList.add(item);
-
-                // 判断前一项与后一项首字母是否相同，不同则分组
-                sectionKey = item.charAt(0);
-                if (i + 1 >= count) { // 最后一项，将剩余的添加
-                    add(sectionKey, sectionList);
-                } else if (!sectionKey.equals(list.get(i + 1).charAt(0))) {
-                    // 根据首字母获取缓存中的section下标
-                    add(sectionKey, sectionList);
-                    // 另开分组
-                    sectionList = null;
-                }
-            }
+        public void addAll(List<CharSequence> list) {
+            addAll(list, mKeyCreator);
         }
 
         @Override
