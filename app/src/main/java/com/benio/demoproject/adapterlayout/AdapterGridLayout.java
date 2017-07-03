@@ -37,6 +37,17 @@ public class AdapterGridLayout extends GridLayout implements AdapterView<ListAda
         }
     }
 
+    private OnClickListener mChildClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final int pos = indexOfChild(v);
+            if ((mOnItemClickListener != null) && (mAdapter != null)) {
+                mOnItemClickListener.onItemClick(AdapterGridLayout.this, v,
+                        pos, mAdapter.getItemId(pos));
+            }
+        }
+    };
+
     public AdapterGridLayout(Context context) {
         super(context);
         init(context, null);
@@ -126,7 +137,7 @@ public class AdapterGridLayout extends GridLayout implements AdapterView<ListAda
                 }
                 addViewInLayout(child, -1, params, true);
                 if (mAdapter.areAllItemsEnabled() || mAdapter.isEnabled(i)) {
-                    child.setOnClickListener(new InternalOnClickListener(i));
+                    child.setOnClickListener(mChildClickListener);
                 }
             }
         }
@@ -213,23 +224,6 @@ public class AdapterGridLayout extends GridLayout implements AdapterView<ListAda
                 final int bottom = child.getBottom() + resolveLayoutMargin(lp.bottomMargin);
                 mDivider.setBounds(left, top, right, bottom);
                 mDivider.draw(canvas);
-            }
-        }
-    }
-
-    private class InternalOnClickListener implements OnClickListener {
-
-        int mPosition;
-
-        public InternalOnClickListener(int position) {
-            mPosition = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if ((mOnItemClickListener != null) && (mAdapter != null)) {
-                mOnItemClickListener.onItemClick(AdapterGridLayout.this, v,
-                        mPosition, mAdapter.getItemId(mPosition));
             }
         }
     }

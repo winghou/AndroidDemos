@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.benio.demoproject.R;
 import com.benio.demoproject.common.ViewHolder;
@@ -41,6 +42,12 @@ public class AdapterLayoutActivity extends AppCompatActivity {
     private void showLinear() {
         AdapterLinearLayout linearLayout = new AdapterLinearLayout(this);
         linearLayout.setOrientation(LinearLayoutCompat.VERTICAL);
+        linearLayout.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(ViewGroup parent, View view, int position, long id) {
+                Toast.makeText(AdapterLayoutActivity.this, "pos:" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
         linearLayout.setAdapter(mAdapter);
         mContainerView.removeAllViews();
         mContainerView.addView(linearLayout);
@@ -51,6 +58,12 @@ public class AdapterLayoutActivity extends AppCompatActivity {
         gridLayout.setColumnCount(3);
         gridLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
         gridLayout.setAdapter(mAdapter);
+        gridLayout.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(ViewGroup parent, View view, int position, long id) {
+                Toast.makeText(AdapterLayoutActivity.this, "pos" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
         mContainerView.removeAllViews();
         mContainerView.addView(gridLayout);
     }

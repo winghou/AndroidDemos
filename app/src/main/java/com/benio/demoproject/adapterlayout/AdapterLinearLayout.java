@@ -32,6 +32,17 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
         }
     }
 
+    private OnClickListener mChildClickListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            final int pos = indexOfChild(v);
+            if ((mOnItemClickListener != null) && (mAdapter != null)) {
+                mOnItemClickListener.onItemClick(AdapterLinearLayout.this, v,
+                        pos, mAdapter.getItemId(pos));
+            }
+        }
+    };
+
     public AdapterLinearLayout(Context context) {
         super(context);
     }
@@ -109,7 +120,7 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
                 }
                 addViewInLayout(child, -1, params, true);
                 if (mAdapter.areAllItemsEnabled() || mAdapter.isEnabled(i)) {
-                    child.setOnClickListener(new InternalOnClickListener(i));
+                    child.setOnClickListener(mChildClickListener);
                 }
             }
         }
@@ -131,22 +142,5 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
             mAdapter.unregisterDataSetObserver(mObserver);
         }
         mObserver = null;
-    }
-
-    private class InternalOnClickListener implements OnClickListener {
-
-        int mPosition;
-
-        public InternalOnClickListener(int position) {
-            mPosition = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if ((mOnItemClickListener != null) && (mAdapter != null)) {
-                mOnItemClickListener.onItemClick(AdapterLinearLayout.this, v,
-                        mPosition, mAdapter.getItemId(mPosition));
-            }
-        }
     }
 }
