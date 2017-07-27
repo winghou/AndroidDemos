@@ -6,10 +6,16 @@ package com.benio.demoproject.usecase;
 public abstract class BaseUseCase<Q extends UseCase.RequestValues, P extends UseCase.ResponseValue> extends UseCase<Q, P> {
 
     protected void notifySuccess(final P response) {
-        getUseCaseCallback().onSuccess(response);
+        UseCaseCallback<P> callback = getUseCaseCallback();
+        if (callback != null) {
+            callback.onSuccess(response);
+        }
     }
 
     protected void notifyError(final Exception e) {
-        getUseCaseCallback().onError(e);
+        UseCaseCallback<P> callback = getUseCaseCallback();
+        if (callback != null) {
+            callback.onError(e);
+        }
     }
 }

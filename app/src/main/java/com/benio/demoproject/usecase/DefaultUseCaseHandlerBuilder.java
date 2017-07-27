@@ -7,8 +7,9 @@ import java.util.concurrent.Executor;
  */
 public class DefaultUseCaseHandlerBuilder implements UseCaseHandlerBuilder {
     private static UseCaseHandlerBuilder sInstance;
-
-    private UseCaseHandler mUseCaseHandler;
+    // default UseCaseHandlers
+    private static UseCaseHandler DEFAULT_HANDLER;
+    private static UseCaseHandler DEFAULT_BACKGROUND_HANDLER;
 
     private Executor mExecutor;
     private Executor mResponsePoster;
@@ -41,22 +42,40 @@ public class DefaultUseCaseHandlerBuilder implements UseCaseHandlerBuilder {
             mResponsePoster = ExecutorFactory.ui();
         }
 
-        // reset scheduler
-        UseCaseSchedulerImpl scheduler = UseCaseSchedulerImpl.INSTANCE;
-        scheduler.init(mExecutor, mResponsePoster);
-
-        if (mUseCaseHandler == null) {
-            mUseCaseHandler = new UseCaseHandler(scheduler);
+        UseCaseHandler useCaseHandler = null;
+        if (mExecutor.equals(ExecutorFactory.immediate()) && mResponsePoster.equals(ExecutorFactory.ui())) {
+            useCaseHandler = getDefaultUseCaseHandler();
+        } else if (mExecutor.equals(ExecutorFactory.background()) && mResponsePoster.equals(ExecutorFactory.ui())) {
+            useCaseHandler = getDefaultBackgroundUseCaseHandler();
+        } else {
+            useCaseHandler = new UseCaseHandler(new UseCaseSchedulerImpl(mExecutor, mResponsePoster));
         }
 
         // reset mExecutor and mResponsePoster to reuse the DefaultUseCaseHandlerBuilder
         mExecutor = mResponsePoster = null;
 
-        return mUseCaseHandler;
+        return useCaseHandler;
+    }
+
+    public static UseCaseHandler getDefaultUseCaseHandler() {
+        if (DEFAULT_HANDLER == null) {
+            DEFAULT_HANDLER = newUseCaseHandler(ExecutorFactory.immediate(), ExecutorFactory.ui());
+        }
+        return DEFAULT_HANDLER;
+    }
+
+    public static UseCaseHandler getDefaultBackgroundUseCaseHandler() {
+        if (DEFAULT_BACKGROUND_HANDLER == null) {
+            DEFAULT_BACKGROUND_HANDLER = newUseCaseHandler(ExecutorFactory.background(), ExecutorFactory.ui());
+        }
+        return DEFAULT_BACKGROUND_HANDLER;
+    }
+
+    public static UseCaseHandler newUseCaseHandler(Executor executor, Executor responsePoster) {
+        return new UseCaseHandler(new UseCaseSchedulerImpl(executor, responsePoster));
     }
 
     private static class UseCaseSchedulerImpl implements UseCaseScheduler {
-        public static final UseCaseSchedulerImpl INSTANCE = new UseCaseSchedulerImpl();
         /**
          * Used for posting responses, typically to the main thread.
          */
@@ -66,7 +85,7 @@ public class DefaultUseCaseHandlerBuilder implements UseCaseHandlerBuilder {
          */
         private Executor mExecutor;
 
-        public void init(Executor executor, Executor responsePoster) {
+        public UseCaseSchedulerImpl(Executor executor, Executor responsePoster) {
             mExecutor = executor;
             mResponsePoster = responsePoster;
         }
