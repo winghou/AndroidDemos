@@ -69,6 +69,8 @@
         </activity>
         <activity android:name=".pinnedsection.PinnedSectionActivity">
         </activity>
+        <activity android:name=".compoundbutton.CompoundButtonActivity">
+        </activity>
     </application>
 
 </manifest>

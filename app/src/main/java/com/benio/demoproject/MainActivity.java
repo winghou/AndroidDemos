@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.benio.demoproject.adapterlayout.AdapterLayoutActivity;
 import com.benio.demoproject.common.ViewHolder;
 import com.benio.demoproject.common.ViewHolderAdapter;
+import com.benio.demoproject.compoundbutton.CompoundButtonActivity;
 import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.db.SQLiteActivity;
 import com.benio.demoproject.fingerprint.FingerprintActivity;
@@ -36,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("LockPatternView", LockActivity.class),
             new DemoInfo("Fingerprint", FingerprintActivity.class),
             new DemoInfo("SQLite", SQLiteActivity.class),
-            new DemoInfo("PinnedSection", PinnedSectionActivity.class)
+            new DemoInfo("PinnedSection", PinnedSectionActivity.class),
+            new DemoInfo("CompoundButton", CompoundButtonActivity.class),
     };
 
     @Override

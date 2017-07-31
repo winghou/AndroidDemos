@@ -70,4 +70,12 @@
             <enum name="none" value="-1"/>
         </attr>
     </declare-styleable>
+
+    <declare-styleable name="CompoundButtonGroup">
+        <attr name="cbg_checkMode" format="enum">
+            <enum name="single" value="0"/>
+            <enum name="multiple" value="1"/>
+        </attr>
+        <attr name="cbg_minCheckedCount" format="integer|reference"/>
+    </declare-styleable>
 </resources>
