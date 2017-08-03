@@ -2,7 +2,9 @@ package com.benio.demoproject.compoundbutton;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.benio.demoproject.R;
 
@@ -19,7 +21,21 @@ public class CompoundButtonActivity extends AppCompatActivity {
         mSingleGroup = (CompoundButtonGroup) findViewById(R.id.cbg_single);
         mMultipleGroup = (CompoundButtonGroup) findViewById(R.id.cbg_multiple);
         mMultipleGroup2 = (CompoundButtonGroup) findViewById(R.id.cbg_multiple_2);
+        mSingleGroup.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d(TAG, "onCheckedChanged() called with: buttonView = [" + buttonView + "], isChecked = [" + isChecked + "]");
+            }
+        });
+        mMultipleGroup2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.d(TAG, "onCheckedChanged() called with: buttonView = [" + buttonView + "], isChecked = [" + isChecked + "]");
+            }
+        });
     }
+
+    private static final String TAG = "xxx";
 
     public void clearCheck(View view) {
         mSingleGroup.clearCheck();

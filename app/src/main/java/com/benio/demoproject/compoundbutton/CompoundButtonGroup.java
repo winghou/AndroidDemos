@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntDef;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -21,8 +20,6 @@ import java.lang.annotation.RetentionPolicy;
  * Created by zhangzhibin on 2017/7/27.
  */
 public class CompoundButtonGroup extends LinearLayout {
-    private static final String TAG = "xxxx";
-
     @IntDef({CHECK_MODE_SINGLE, CHECK_MODE_MULTIPLE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface CheckMode {
@@ -38,10 +35,10 @@ public class CompoundButtonGroup extends LinearLayout {
 
     // when true, mChildCheckedChangeListener discards events
     private boolean mProtectFromCheckedChange = false;
+    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
     private CompoundButton.OnCheckedChangeListener mChildCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            Log.d(TAG, "onCheckedChanged() called isChecked = [" + isChecked + "], mProtectFromCheckedChange = " + mProtectFromCheckedChange);
             // prevents from infinite recursion
             if (mProtectFromCheckedChange) {
                 return;
@@ -119,17 +116,23 @@ public class CompoundButtonGroup extends LinearLayout {
         }
     }
 
+    public void setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
+        mOnCheckedChangeListener = onCheckedChangeListener;
+    }
+
     private void toggleInGroup(CompoundButton buttonView) {
         final int id = buttonView.getId();
         boolean checkedStateChanged = updateCheckState(id);
         if (!checkedStateChanged) {
-            Log.d(TAG, "toggleInGroup: check state not change, id:" + id);
             // 设置checkedView的checked状态与mCheckStates的一致
             mProtectFromCheckedChange = true;
             buttonView.setChecked(mCheckStates.get(id));
             mProtectFromCheckedChange = false;
         } else {
             updateCompoundButtons();
+        }
+        if (checkedStateChanged && mOnCheckedChangeListener != null) {
+            mOnCheckedChangeListener.onCheckedChanged(buttonView, buttonView.isChecked());
         }
     }
 
