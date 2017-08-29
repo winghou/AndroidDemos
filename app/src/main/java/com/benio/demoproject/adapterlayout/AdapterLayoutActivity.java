@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ public class AdapterLayoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adapter_layout);
         mContainerView = (ScrollView) findViewById(R.id.scrollView);
-        int size = 50;
+        int size = 500;
         List<String> data = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             data.add(String.valueOf(i));
@@ -41,6 +42,8 @@ public class AdapterLayoutActivity extends AppCompatActivity {
 
     private void showLinear() {
         AdapterLinearLayout linearLayout = new AdapterLinearLayout(this);
+        linearLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
+        linearLayout.setShowDividers(LinearLayoutCompat.SHOW_DIVIDER_MIDDLE);
         linearLayout.setOrientation(LinearLayoutCompat.VERTICAL);
         linearLayout.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -96,6 +99,8 @@ public class AdapterLayoutActivity extends AppCompatActivity {
     }
 
     private static class MyAdapter extends ViewHolderAdapter {
+        private static final int TYPE_TEXT = 0;
+        private static final int TYPE_IMG = 1;
 
         private List<String> mData;
 
@@ -128,14 +133,35 @@ public class AdapterLayoutActivity extends AppCompatActivity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_adapter_layout, parent, false);
+            View itemView;
+            if (viewType == TYPE_TEXT) {
+                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_adapter_layout, parent, false);
+            } else {
+                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_adapter_layout_2, parent, false);
+            }
             return new ViewHolder(itemView);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            TextView textView = (TextView) holder.itemView;
-            textView.setText(mData.get(position));
+            final int viewType = getItemViewType(position);
+            if (viewType == TYPE_TEXT) {
+                TextView textView = (TextView) holder.itemView;
+                textView.setText(mData.get(position));
+            } else {
+                ImageView imageView = (ImageView) holder.itemView;
+                imageView.setImageResource(R.mipmap.ic_launcher);
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position % 2 == 0 ? TYPE_TEXT : TYPE_IMG;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2;
         }
     }
 }

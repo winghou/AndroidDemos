@@ -19,6 +19,7 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
     private ListAdapter mAdapter;
     private DataSetObserver mObserver;
     private OnItemClickListener mOnItemClickListener;
+    private RecycleBin mRecycleBin;
 
     private class AdapterDataSetObserver extends DataSetObserver {
         @Override
@@ -99,31 +100,51 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
                 mObserver = new AdapterDataSetObserver();
             }
             adapter.registerDataSetObserver(mObserver);
+
+            if (mRecycleBin == null) {
+                mRecycleBin = new RecycleBin();
+            }
+            mRecycleBin.setViewTypeCount(adapter.getViewTypeCount());
         }
     }
 
     private void reloadChildViews() {
-        removeAllViews();
+        mRecycleBin.scrapActiveViews();
 
-        if (mAdapter == null || mAdapter.getCount() == 0) {
+        // remove and recycle views.
+        final int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            final int viewType = mAdapter.getItemViewType(i);
+            final View child = getChildAt(i);
+            child.setOnClickListener(null);
+            mRecycleBin.addScrapView(child, i, viewType);
+        }
+        removeViewsInLayout(0, childCount);
+
+        if (mAdapter == null) {
             return;
         }
 
-        int count = mAdapter.getCount();
+        // obtain and add views.
+        final boolean areAllItemsEnabled = mAdapter.areAllItemsEnabled();
+        final int count = mAdapter.getCount();
         for (int i = 0; i < count; ++i) {
-            // Nothing found in the recycler -- ask the adapter for a view
-            View child = mAdapter.getView(i, null, this);
+            final int viewType = mAdapter.getItemViewType(i);
+            final View scrapView = mRecycleBin.getScrapView(i, viewType);
+            final View child = mAdapter.getView(i, scrapView, this);
             if (child != null) {
                 ViewGroup.LayoutParams params = child.getLayoutParams();
                 if (params == null) {
                     params = generateDefaultLayoutParams();
                 }
                 addViewInLayout(child, -1, params, true);
-                if (mAdapter.areAllItemsEnabled() || mAdapter.isEnabled(i)) {
+                if (areAllItemsEnabled || mAdapter.isEnabled(i)) {
                     child.setOnClickListener(mChildClickListener);
                 }
             }
         }
+
+        requestLayout();
     }
 
     @Override
