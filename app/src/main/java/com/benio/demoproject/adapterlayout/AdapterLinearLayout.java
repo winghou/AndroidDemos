@@ -16,6 +16,7 @@ import android.widget.ListAdapter;
  * Created by zhangzhibin on 2016/10/19.
  */
 public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterView<ListAdapter> {
+    public static final int IGNORE_ITEM_VIEW_TYPE = android.widget.AdapterView.ITEM_VIEW_TYPE_IGNORE;
     private ListAdapter mAdapter;
     private DataSetObserver mObserver;
     private OnItemClickListener mOnItemClickListener;
@@ -117,7 +118,9 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
             final int viewType = mAdapter.getItemViewType(i);
             final View child = getChildAt(i);
             child.setOnClickListener(null);
-            mRecycleBin.addScrapView(child, i, viewType);
+            if (viewType != IGNORE_ITEM_VIEW_TYPE) {
+                mRecycleBin.addScrapView(child, i, viewType);
+            }
         }
         removeViewsInLayout(0, childCount);
 
@@ -130,7 +133,12 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
         final int count = mAdapter.getCount();
         for (int i = 0; i < count; ++i) {
             final int viewType = mAdapter.getItemViewType(i);
-            final View scrapView = mRecycleBin.getScrapView(i, viewType);
+            final View scrapView;
+            if (viewType != IGNORE_ITEM_VIEW_TYPE) {
+                scrapView = mRecycleBin.getScrapView(i, viewType);
+            } else {
+                scrapView = null;
+            }
             final View child = mAdapter.getView(i, scrapView, this);
             if (child != null) {
                 ViewGroup.LayoutParams params = child.getLayoutParams();
