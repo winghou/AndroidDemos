@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.benio.demoproject.adapterlayout.AdapterLayoutActivity;
+import com.benio.demoproject.badge.BadgeActivity;
 import com.benio.demoproject.common.ViewHolder;
 import com.benio.demoproject.common.ViewHolderAdapter;
 import com.benio.demoproject.compoundbutton.CompoundButtonActivity;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("SQLite", SQLiteActivity.class),
             new DemoInfo("PinnedSection", PinnedSectionActivity.class),
             new DemoInfo("CompoundButton", CompoundButtonActivity.class),
+            new DemoInfo("Badge", BadgeActivity.class),
     };
 
     @Override

@@ -71,6 +71,8 @@
         </activity>
         <activity android:name=".compoundbutton.CompoundButtonActivity">
         </activity>
+        <activity android:name=".badge.BadgeActivity">
+        </activity>
     </application>
 
 </manifest>
