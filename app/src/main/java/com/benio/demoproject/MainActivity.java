@@ -20,6 +20,7 @@ import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.db.SQLiteActivity;
 import com.benio.demoproject.fingerprint.FingerprintActivity;
 import com.benio.demoproject.gesturelock.LockActivity;
+import com.benio.demoproject.hencoder.HenCoderActivity;
 import com.benio.demoproject.pinnedsection.PinnedSectionActivity;
 import com.benio.demoproject.progress.ProgressActivity;
 import com.benio.demoproject.share.ShareTextResultActivity;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("PinnedSection", PinnedSectionActivity.class),
             new DemoInfo("CompoundButton", CompoundButtonActivity.class),
             new DemoInfo("Badge", BadgeActivity.class),
+            new DemoInfo("HenCoder", HenCoderActivity.class)
     };
 
     @Override
