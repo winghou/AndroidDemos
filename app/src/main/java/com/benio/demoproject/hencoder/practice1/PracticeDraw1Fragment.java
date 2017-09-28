@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.benio.demoproject.R;
+import com.benio.demoproject.hencoder.ViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,48 +80,10 @@ public class PracticeDraw1Fragment extends Fragment {
         views.add(new Practice13DrawTextView(context));
         titles.add("drawText()");
 
-        PagerAdapter adapter = new MyPagerAdapter(views, titles);
+        PagerAdapter adapter = new ViewPagerAdapter(views, titles);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabLayout);
         ViewPager pager = (ViewPager) view.findViewById(R.id.pager);
         pager.setAdapter(adapter);
         tabLayout.setupWithViewPager(pager);
-    }
-
-    static class MyPagerAdapter extends PagerAdapter {
-        private List<View> mViews;
-        private List<String> mTitles;
-
-        MyPagerAdapter(List<View> views, List<String> titles) {
-            mViews = views;
-            mTitles = titles;
-        }
-
-        @Override
-        public int getCount() {
-            return mViews.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(View view, Object object) {
-            return view == object;
-        }
-
-        @Override
-        public Object instantiateItem(ViewGroup container, int position) {
-            View view = mViews.get(position);
-            container.addView(view);
-            return view;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object) {
-            View view = (View) object;
-            container.removeView(view);
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mTitles.get(position);
-        }
     }
 }

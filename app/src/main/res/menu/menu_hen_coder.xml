@@ -3,4 +3,7 @@
     <item
         android:id="@+id/action_1"
         android:title="绘制基础"/>
+    <item
+        android:id="@+id/action_2"
+        android:title="Paint 详解"/>
 </menu>
