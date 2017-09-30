@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import com.benio.demoproject.R;
 import com.benio.demoproject.hencoder.practice1.PracticeDraw1Fragment;
 import com.benio.demoproject.hencoder.practice2.PracticeDraw2Fragment;
+import com.benio.demoproject.hencoder.practice3.PracticeDraw3Fragment;
 
 public class HenCoderActivity extends AppCompatActivity {
 
@@ -34,6 +35,9 @@ public class HenCoderActivity extends AppCompatActivity {
                 break;
             case R.id.action_2:
                 fragment = PracticeDraw2Fragment.newInstance();
+                break;
+            case R.id.action_3:
+                fragment = PracticeDraw3Fragment.newInstance();
                 break;
         }
 
