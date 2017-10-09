@@ -10,6 +10,7 @@ import com.benio.demoproject.R;
 import com.benio.demoproject.hencoder.practice1.PracticeDraw1Fragment;
 import com.benio.demoproject.hencoder.practice2.PracticeDraw2Fragment;
 import com.benio.demoproject.hencoder.practice3.PracticeDraw3Fragment;
+import com.benio.demoproject.hencoder.practice4.PracticeDraw4Fragment;
 
 public class HenCoderActivity extends AppCompatActivity {
 
@@ -17,6 +18,8 @@ public class HenCoderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hen_coder);
+
+        replaceFragment(PracticeDraw1Fragment.newInstance());
     }
 
     @Override
@@ -38,6 +41,9 @@ public class HenCoderActivity extends AppCompatActivity {
                 break;
             case R.id.action_3:
                 fragment = PracticeDraw3Fragment.newInstance();
+                break;
+            case R.id.action_4:
+                fragment = PracticeDraw4Fragment.newInstance();
                 break;
         }
 
