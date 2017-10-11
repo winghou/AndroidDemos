@@ -12,6 +12,7 @@ import com.benio.demoproject.hencoder.practice2.PracticeDraw2Fragment;
 import com.benio.demoproject.hencoder.practice3.PracticeDraw3Fragment;
 import com.benio.demoproject.hencoder.practice4.PracticeDraw4Fragment;
 import com.benio.demoproject.hencoder.practice5.PracticeDraw5Fragment;
+import com.benio.demoproject.hencoder.practice6.PracticeDraw6Fragment;
 
 public class HenCoderActivity extends AppCompatActivity {
 
@@ -48,6 +49,9 @@ public class HenCoderActivity extends AppCompatActivity {
                 break;
             case R.id.action_5:
                 fragment = PracticeDraw5Fragment.newInstance();
+                break;
+            case R.id.action_6:
+                fragment = PracticeDraw6Fragment.newInstance();
                 break;
         }
 
