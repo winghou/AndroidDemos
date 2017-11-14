@@ -78,4 +78,13 @@
         </attr>
         <attr name="cbg_minCheckedCount" format="integer|reference"/>
     </declare-styleable>
+
+    <declare-styleable name="BadgeRadioButton">
+        <attr name="brb_clipToPadding" format="boolean|reference"/>
+        <attr name="brb_radius" format="dimension|reference"/>
+        <attr name="brb_rightMargin" format="dimension|reference"/>
+        <attr name="brb_topMargin" format="dimension|reference"/>
+        <attr name="brb_visible" format="boolean|reference"/>
+        <attr name="brb_color" format="color|reference"/>
+    </declare-styleable>
 </resources>

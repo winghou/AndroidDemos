@@ -16,6 +16,7 @@ import com.benio.demoproject.badge.BadgeActivity;
 import com.benio.demoproject.common.ViewHolder;
 import com.benio.demoproject.common.ViewHolderAdapter;
 import com.benio.demoproject.compoundbutton.CompoundButtonActivity;
+import com.benio.demoproject.constraint.ConstraintLayoutActivity;
 import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.db.SQLiteActivity;
 import com.benio.demoproject.fingerprint.FingerprintActivity;
@@ -42,7 +43,8 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("PinnedSection", PinnedSectionActivity.class),
             new DemoInfo("CompoundButton", CompoundButtonActivity.class),
             new DemoInfo("Badge", BadgeActivity.class),
-            new DemoInfo("HenCoder", HenCoderActivity.class)
+            new DemoInfo("HenCoder", HenCoderActivity.class),
+            new DemoInfo("ConstraintLayout", ConstraintLayoutActivity.class)
     };
 
     @Override

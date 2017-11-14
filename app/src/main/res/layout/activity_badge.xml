@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_badge"
     android:layout_width="match_parent"
@@ -37,4 +38,63 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="wrap"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.benio.demoproject.badge.BadgeRadioButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#abc"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="全部"
+            android:textSize="15sp"
+            app:brb_visible="false"/>
+
+        <com.benio.demoproject.badge.BadgeRadioButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="待出行"
+            android:textSize="15sp"/>
+
+        <com.benio.demoproject.badge.BadgeRadioButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#abc"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="代付款"
+            android:textSize="15sp"
+            app:brb_color="@color/colorPrimary"
+            app:brb_radius="5dp"
+            app:brb_rightMargin="5dp"
+            app:brb_topMargin="5dp"/>
+
+        <com.benio.demoproject.badge.BadgeRadioButton
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="待评价"
+            android:textSize="15sp"
+            app:brb_clipToPadding="true"/>
+    </RadioGroup>
+
 </LinearLayout>

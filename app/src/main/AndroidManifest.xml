@@ -74,6 +74,8 @@
         </activity>
         <activity android:name=".hencoder.HenCoderActivity">
         </activity>
+        <activity android:name=".constraint.ConstraintLayoutActivity">
+        </activity>
     </application>
 
 </manifest>
