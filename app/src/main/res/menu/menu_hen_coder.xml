@@ -21,4 +21,7 @@
     <item
         android:id="@+id/action_7"
         android:title="属性动画（进阶篇）"/>
+    <item
+        android:id="@+id/action_8"
+        android:title="布局基础"/>
 </menu>

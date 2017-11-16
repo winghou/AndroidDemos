@@ -94,7 +94,9 @@
             android:paddingTop="10dp"
             android:text="待评价"
             android:textSize="15sp"
-            app:brb_clipToPadding="true"/>
+            app:brb_clipToPadding="true"
+            app:brb_radius="3dp"
+            app:brb_rightMargin="10dp"/>
     </RadioGroup>
 
 </LinearLayout>
