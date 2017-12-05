@@ -149,4 +149,28 @@ public class RecycleBin {
             return null;
         }
     }
+
+
+    /**
+     * Clears the scrap heap.
+     */
+    void clear() {
+        if (viewTypeCount == 1) {
+            final SparseArray<View> scrap = currentScrapViews;
+            clearScrap(scrap);
+        } else {
+            final int typeCount = viewTypeCount;
+            for (int i = 0; i < typeCount; i++) {
+                final SparseArray<View> scrap = scrapViews[i];
+                clearScrap(scrap);
+            }
+        }
+    }
+
+    private static void clearScrap(final SparseArray<View> scrap) {
+        final int scrapCount = scrap.size();
+        for (int j = 0; j < scrapCount; j++) {
+            scrap.remove(scrap.keyAt(scrapCount - 1 - j));
+        }
+    }
 }
