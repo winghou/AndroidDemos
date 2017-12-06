@@ -18,57 +18,63 @@ import com.benio.demoproject.R;
 import com.benio.demoproject.common.ViewHolder;
 import com.benio.demoproject.common.ViewHolderAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdapterLayoutActivity extends AppCompatActivity {
     private static final String TAG = "Adapter";
     private MyAdapter mAdapter;
     private ScrollView mContainerView;
+    private AdapterView mAdapterView;
+    private AdapterLinearLayout mLinearLayout;
+    private AdapterGridLayout mGridLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adapter_layout);
         mContainerView = (ScrollView) findViewById(R.id.scrollView);
-        int size = 500;
-        List<String> data = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            data.add(String.valueOf(i));
-        }
-        mAdapter = new MyAdapter(data);
+        int size = 50;
+        mAdapter = new MyAdapter(DataUtil.getStringList(size));
         showGrid();
     }
 
     private void showLinear() {
-        AdapterLinearLayout linearLayout = new AdapterLinearLayout(this);
-        linearLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
-        linearLayout.setShowDividers(LinearLayoutCompat.SHOW_DIVIDER_MIDDLE);
-        linearLayout.setOrientation(LinearLayoutCompat.VERTICAL);
-        linearLayout.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(ViewGroup parent, View view, int position, long id) {
-                Toast.makeText(AdapterLayoutActivity.this, "pos:" + position, Toast.LENGTH_SHORT).show();
-            }
-        });
-        linearLayout.setAdapter(mAdapter);
+        if (mLinearLayout == null) {
+            AdapterLinearLayout linearLayout = new AdapterLinearLayout(this);
+            linearLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
+            linearLayout.setShowDividers(LinearLayoutCompat.SHOW_DIVIDER_MIDDLE);
+            linearLayout.setOrientation(LinearLayoutCompat.VERTICAL);
+            linearLayout.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(ViewGroup parent, View view, int position, long id) {
+                    Toast.makeText(AdapterLayoutActivity.this, "pos:" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+            linearLayout.setAdapter(mAdapter);
+            mLinearLayout = linearLayout;
+        }
         mContainerView.removeAllViews();
-        mContainerView.addView(linearLayout);
+        mContainerView.addView(mLinearLayout);
+        mAdapterView = mLinearLayout;
     }
 
     private void showGrid() {
-        AdapterGridLayout gridLayout = new AdapterGridLayout(this);
-        gridLayout.setColumnCount(3);
-        gridLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
-        gridLayout.setAdapter(mAdapter);
-        gridLayout.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(ViewGroup parent, View view, int position, long id) {
-                Toast.makeText(AdapterLayoutActivity.this, "pos" + position, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if (mGridLayout == null) {
+            AdapterGridLayout gridLayout = new AdapterGridLayout(this);
+            gridLayout.setColumnCount(3);
+            gridLayout.setDividerDrawable(ContextCompat.getDrawable(this, R.drawable.divider));
+            gridLayout.setAdapter(mAdapter);
+            gridLayout.setOnItemClickListener(new OnItemClickListener() {
+                @Override
+                public void onItemClick(ViewGroup parent, View view, int position, long id) {
+                    Toast.makeText(AdapterLayoutActivity.this, "pos" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+            mGridLayout = gridLayout;
+        }
         mContainerView.removeAllViews();
-        mContainerView.addView(gridLayout);
+        mContainerView.addView(mGridLayout);
+        mAdapterView = mGridLayout;
     }
 
     @Override
@@ -93,6 +99,10 @@ public class AdapterLayoutActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.grid) {
             showGrid();
+            return true;
+        } else if (id == R.id.adapter) {
+            mAdapter = new MyAdapter(DataUtil.getStringList(40));
+            mAdapterView.setAdapter(mAdapter);
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -168,30 +168,41 @@ public class AdapterLinearLayout extends LinearLayoutCompat implements AdapterVi
         final boolean areAllItemsEnabled = mAdapter.areAllItemsEnabled();
         final int count = mAdapter.getCount();
         for (int i = 0; i < count; ++i) {
-            final int viewType = mAdapter.getItemViewType(i);
-            final View scrapView;
-            if (viewType != IGNORE_ITEM_VIEW_TYPE) {
-                scrapView = mRecycleBin.getScrapView(i, viewType);
-            } else {
-                scrapView = null;
-            }
-            final View child = mAdapter.getView(i, scrapView, this);
-            if (scrapView != null && child != scrapView) {
-                // Failed to re-bind the data, return scrap to the heap.
-                mRecycleBin.addScrapView(scrapView, i, viewType);
-            }
+            final View child = obtainView(i);
+
             if (child != null) {
-                ViewGroup.LayoutParams params = child.getLayoutParams();
-                if (params == null) {
-                    params = generateDefaultLayoutParams();
+                final ViewGroup.LayoutParams vlp = child.getLayoutParams();
+                final LayoutParams lp;
+                if (vlp == null) {
+                    lp = generateDefaultLayoutParams();
+                } else if (!checkLayoutParams(vlp)) {
+                    lp = generateLayoutParams(vlp);
+                } else {
+                    lp = (LayoutParams) vlp;
                 }
-                addView(child, -1, params);
+                addView(child, -1, lp);
                 if (areAllItemsEnabled || mAdapter.isEnabled(i)) {
                     child.setOnClickListener(mChildClickListener);
                     child.setOnLongClickListener(mChildLongClickListener);
                 }
             }
         }
+    }
+
+    private View obtainView(int position) {
+        final int viewType = mAdapter.getItemViewType(position);
+        final View scrapView;
+        if (viewType != IGNORE_ITEM_VIEW_TYPE) {
+            scrapView = mRecycleBin.getScrapView(position, viewType);
+        } else {
+            scrapView = null;
+        }
+        final View child = mAdapter.getView(position, scrapView, this);
+        if (scrapView != null && child != scrapView) {
+            // Failed to re-bind the data, return scrap to the heap.
+            mRecycleBin.addScrapView(scrapView, position, viewType);
+        }
+        return child;
     }
 
     @Override
