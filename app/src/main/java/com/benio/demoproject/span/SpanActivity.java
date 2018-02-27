@@ -55,4 +55,12 @@ public class SpanActivity extends AppCompatActivity {
         stringBuilder.setSpan(new RoundedBackgroundSpan(Color.BLUE, 10, 10, 5), 0, CONTENT.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         mTextView.setText(stringBuilder);
     }
+
+    public void showSpanUtil(View view) {
+        // Create an italic "hello, " a red "world",
+        // and bold the entire sequence.
+        CharSequence text = SpanUtil.bold(SpanUtil.italic("hello"),
+                SpanUtil.color(Color.RED, "world"));
+        mTextView.setText(text);
+    }
 }
