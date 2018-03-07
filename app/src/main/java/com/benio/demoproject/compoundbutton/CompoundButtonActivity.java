@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.RadioGroup;
 
 import com.benio.demoproject.R;
 
@@ -33,6 +34,17 @@ public class CompoundButtonActivity extends AppCompatActivity {
                 Log.d(TAG, "onCheckedChanged() called with: buttonView = [" + buttonView + "], isChecked = [" + isChecked + "]");
             }
         });
+
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radio_group);
+        RadioGroup radioGroup2 = (RadioGroup) findViewById(R.id.radio_group_2);
+
+        RadioGroupHelper radioGroupHelper = new RadioGroupHelper();
+        radioGroupHelper.addItems("房", "票", "餐");
+        radioGroupHelper.attachTo(radioGroup);
+
+        radioGroupHelper.setRadioLayoutResource(R.layout.item_radio_group);
+        radioGroupHelper.addItem("哈哈");
+        radioGroupHelper.attachTo(radioGroup2);
     }
 
     private static final String TAG = "xxx";
