@@ -1,6 +1,6 @@
 package com.benio.demoproject.compoundbutton;
 
-import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -15,13 +15,31 @@ import java.util.List;
 public class RadioGroupHelper {
     private List<CharSequence> mItems;
     private int mRadioLayoutResource;
+    private int mCheckedItem = -1;
 
     public RadioGroupHelper() {
         mItems = new ArrayList<>();
     }
 
+    /**
+     * 设置RadioButton布局
+     *
+     * @param radioLayoutResource
+     * @return
+     */
     public RadioGroupHelper setRadioLayoutResource(int radioLayoutResource) {
         mRadioLayoutResource = radioLayoutResource;
+        return this;
+    }
+
+    /**
+     * 设置选中项
+     *
+     * @param checkedItem 选中项下标
+     * @return
+     */
+    public RadioGroupHelper setCheckedItem(int checkedItem) {
+        mCheckedItem = checkedItem;
         return this;
     }
 
@@ -49,34 +67,33 @@ public class RadioGroupHelper {
      * @return
      */
     public RadioGroupHelper addItem(CharSequence item) {
-        mItems.add(item);
+        if (item != null) {
+            mItems.add(item);
+        }
         return this;
     }
 
-    public void attachTo(RadioGroup radioGroup) {
-        final Context context = radioGroup.getContext();
-        int itemCount = mItems.size();
+    public void attachTo(@NonNull RadioGroup radioGroup) {
+        final int itemCount = mItems.size();
         for (int i = 0; i < itemCount; i++) {
             CharSequence item = mItems.get(i);
-            RadioButton radioButton = makeRadioButton(context, itemCount, i);
+            RadioButton radioButton = makeRadioButton(radioGroup, itemCount, i);
             radioButton.setText(item);
-            radioButton.setId(i);
+            radioButton.setChecked(mCheckedItem == i);
             radioGroup.addView(radioButton);
         }
     }
 
-    protected RadioButton makeRadioButton(Context context, int itemCount, int index) {
-        RadioButton radioButton = null;
+    @NonNull
+    protected RadioButton makeRadioButton(RadioGroup radioGroup, int itemCount, int index) {
+        RadioButton radioButton;
         if (mRadioLayoutResource != 0) {
-            radioButton = (RadioButton) LayoutInflater.from(context)
-                    .inflate(mRadioLayoutResource, null);
+            radioButton = (RadioButton) LayoutInflater.from(radioGroup.getContext())
+                    .inflate(mRadioLayoutResource, radioGroup, false);
         } else {
-            radioButton = new RadioButton(context);
-            RadioGroup.LayoutParams p =
-                    new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
-            p.weight = 1;
-            radioButton.setLayoutParams(p);
+            radioButton = new RadioButton(radioGroup.getContext());
         }
+        radioButton.setId(index);
         return radioButton;
     }
 }

@@ -8,4 +8,8 @@
     <color name="lock_pattern_view_regular_color">#ffffffff</color>
     <color name="lock_pattern_view_success_color">#ffffffff</color>
     <color name="lock_pattern_view_error_color">#fff4511e</color>
+
+    <color name="tab_group_btn_normal">#fff</color>
+    <color name="tab_group_btn_checked">#FF4081</color>
+    <color name="tab_group_btn_border">#D9D9D9</color>
 </resources>
