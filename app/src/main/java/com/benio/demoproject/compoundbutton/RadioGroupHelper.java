@@ -73,6 +73,16 @@ public class RadioGroupHelper {
         return this;
     }
 
+    /**
+     * 清除所有选项
+     *
+     * @return
+     */
+    public RadioGroupHelper clearItems() {
+        mItems.clear();
+        return this;
+    }
+
     public void attachTo(@NonNull RadioGroup radioGroup) {
         final int itemCount = mItems.size();
         for (int i = 0; i < itemCount; i++) {

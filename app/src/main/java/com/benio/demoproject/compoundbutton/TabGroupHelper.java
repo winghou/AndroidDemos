@@ -45,6 +45,12 @@ public class TabGroupHelper extends RadioGroupHelper {
         return this;
     }
 
+    @Override
+    public TabGroupHelper clearItems() {
+        super.clearItems();
+        return this;
+    }
+
     public TabGroupHelper setTabBackgroundForEnd(int tabBackgroundForEnd) {
         mTabBackgroundForEnd = tabBackgroundForEnd;
         return this;
