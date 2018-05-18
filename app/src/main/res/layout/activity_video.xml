@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.benio.demoproject.video.VideoActivity">
+
+    <Button
+        android:id="@+id/btn_system_player"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="SystemPlayer"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/btn_texture"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <Button
+        android:id="@+id/btn_texture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextureView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_system_player"
+        app:layout_constraintLeft_toRightOf="@+id/btn_system_player"/>
+
+    <Button
+        android:id="@+id/btn_local"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="localVideo"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/btn_stream"
+        app:layout_constraintTop_toBottomOf="@id/btn_system_player"/>
+
+    <Button
+        android:id="@+id/btn_stream"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="streamingVideo"
+        app:layout_constraintBaseline_toBaselineOf="@+id/btn_local"
+        app:layout_constraintLeft_toRightOf="@id/btn_local"
+        app:layout_constraintRight_toLeftOf="parent"/>
+
+    <VideoView
+        android:id="@+id/video"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_local"/>
+
+</android.support.constraint.ConstraintLayout>
+
