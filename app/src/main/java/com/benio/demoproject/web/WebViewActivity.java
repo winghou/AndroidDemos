@@ -8,8 +8,9 @@ import android.net.http.SslError;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.benio.demoproject.web.urlrooter.UrlInterceptor;
 import com.benio.demoproject.web.urlrooter.UrlRouterInterceptor;
 
 public class WebViewActivity extends AppCompatActivity {
+    private static final boolean DEBUG = true;
     private static final String TAG = "WebViewActivity";
 
     private WebView mWebView;
@@ -36,15 +38,16 @@ public class WebViewActivity extends AppCompatActivity {
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
-            Log.d(TAG, "onProgressChanged() called with: view = [" + view + "], newProgress = [" + newProgress + "]");
-            mProgressBar.setVisibility(View.VISIBLE);
+            if (DEBUG)
+                Log.i(TAG, "onProgressChanged() called with: newProgress = [" + newProgress + "]");
             mProgressBar.setProgress(newProgress);
         }
 
         @Override
         public void onReceivedTitle(WebView view, String title) {
-            Log.d(TAG, "onReceivedTitle() called with: view = [" + view + "], title = [" + title + "]");
-            setTitle(title);
+            if (DEBUG)
+                Log.i(TAG, "onReceivedTitle() called with: title = [" + title + "]");
+            setWebTitle(title);
         }
     };
 
@@ -57,7 +60,8 @@ public class WebViewActivity extends AppCompatActivity {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            Log.d(TAG, "onPageStarted() called with: view = [" + view + "], url = [" + url + "], favicon = [" + favicon + "]");
+            if (DEBUG)
+                Log.i(TAG, "onPageStarted() called with: url = [" + url + "], favicon = [" + favicon + "]");
             mReceivedError = false;
             loadingFinished = false;
             showLoading();
@@ -65,7 +69,8 @@ public class WebViewActivity extends AppCompatActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            Log.d(TAG, "onPageFinished() called with: view = [" + view + "], url = [" + url + "]");
+            if (DEBUG)
+                Log.i(TAG, "onPageFinished() called with: url = [" + url + "]");
             if (!redirect) {
                 loadingFinished = true;
             }
@@ -74,7 +79,9 @@ public class WebViewActivity extends AppCompatActivity {
                 if (!mReceivedError) {
                     hideLoading();
                     // 完全加载完页面再显示Title
-                    setTitle(view.getTitle());
+                    // https://bugs.chromium.org/p/chromium/issues/detail?id=481570
+                    // 调用goBack()之后onReceivedTitle()方法不会调用
+                    setWebTitle(view.getTitle());
                 } else {
                     showNetError();
                 }
@@ -85,29 +92,38 @@ public class WebViewActivity extends AppCompatActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.d(TAG, "shouldOverrideUrlLoading() called with: view = [" + view + "], url = [" + url + "]");
-            if (mUrlInterceptor.intercept(url)) {
-                return true;
-            }
+            if (DEBUG)
+                Log.i(TAG, "shouldOverrideUrlLoading() called with: url = [" + url + "]");
             if (!loadingFinished) {
                 redirect = true;
             }
 
             loadingFinished = false;
+            if (mUrlInterceptor.intercept(url)) {
+                return true;
+            }
+            WebView.HitTestResult hitTestResult = view.getHitTestResult();
+            if (hitTestResult != null
+                    && hitTestResult.getType() == WebView.HitTestResult.UNKNOWN_TYPE) {
+                // 判断为重定向，不做处理
+                return false;
+            }
             view.loadUrl(url);
             return false;
         }
 
         @Override
         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            Log.d(TAG, "onReceivedError() called with: view = [" + view + "], errorCode = [" + errorCode + "], description = [" + description + "], failingUrl = [" + failingUrl + "]");
+            if (DEBUG)
+                Log.e(TAG, "onReceivedError() called with: errorCode = [" + errorCode + "], description = [" + description + "], failingUrl = [" + failingUrl + "]");
             mReceivedError = true;
             view.stopLoading();
         }
 
         @Override
         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            Log.d(TAG, "onReceivedSslError() called with: view = [" + view + "], handler = [" + handler + "], error = [" + error + "]");
+            if (DEBUG)
+                Log.e(TAG, "onReceivedSslError() called with: handler = [" + handler + "], error = [" + error + "]");
             showSslError(handler, error);
         }
 
@@ -119,7 +135,6 @@ public class WebViewActivity extends AppCompatActivity {
 
             if (mDialog == null) {
                 Context context = WebViewActivity.this;
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setPositiveButton(R.string.btn_confirm, new DialogInterface.OnClickListener() {
                     @Override
@@ -145,6 +160,21 @@ public class WebViewActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void setWebTitle(CharSequence title) {
+        if (DEBUG)
+            Log.i(TAG, "setWebTitle() called with: title = [" + title + "]");
+        if (TextUtils.isEmpty(title)) {
+            setTitle(""); // title empty
+            return;
+        }
+
+        // 忽略title为url的情况
+        if (!Patterns.WEB_URL.matcher(title).matches() &&
+                !title.equals(getTitle())) {
+            setTitle(title);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,13 +261,12 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // 点击back，后退网页
-        if (keyCode == KeyEvent.KEYCODE_BACK && mWebView.canGoBack()) {
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
             mWebView.goBack();
-            return true;
+        } else {
+            super.onBackPressed();
         }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override
