@@ -3,94 +3,78 @@ package com.benio.demoproject.compoundbutton;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
 import android.util.AttributeSet;
-import android.util.SparseBooleanArray;
+import android.util.SparseArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.benio.demoproject.R;
-import com.benio.demoproject.common.utils.ViewUtils;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 
 /**
+ * CompoundButton组，用于多选组合，可设置最小和最大选中个数<p>
+ * 若checkedCount>=maxCheckedCount，则已选中的CompoundButton可反选，未选中的不可选<br>
+ * 若checkedCount<=minCheckedCount，则已选中的CompoundButton不可反选，未选中的可选<br>
  * Created by zhangzhibin on 2017/7/27.
  */
 public class CompoundButtonGroup extends LinearLayout {
-    @IntDef({CHECK_MODE_SINGLE, CHECK_MODE_MULTIPLE})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface CheckMode {
-    }
+    private int mCheckedCount;
+    private int mMinCheckedCount = 0;
+    private int mMaxCheckedCount = Integer.MAX_VALUE;
+    private SparseArray<CompoundButton> mButtons = new SparseArray<>();
 
-    public static final int CHECK_MODE_SINGLE = 0;
-    public static final int CHECK_MODE_MULTIPLE = 1;
-    private int mCheckMode = CHECK_MODE_SINGLE;
-
-    private int mMinCheckedCount;
-    private int mCheckedItemCount;
-    private SparseBooleanArray mCheckStates = new SparseBooleanArray(0);
-
-    // when true, mChildCheckedChangeListener discards events
-    private boolean mProtectFromCheckedChange = false;
-    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
-    private CompoundButton.OnCheckedChangeListener mChildCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            // prevents from infinite recursion
-            if (mProtectFromCheckedChange) {
-                return;
-            }
-            toggleInGroup(buttonView);
-        }
-    };
+    // tracks children compound buttons checked state
+    private CompoundButton.OnCheckedChangeListener mChildOnCheckedChangeListener;
+    private OnCheckedChangeListener mOnCheckedChangeListener;
+    private PassThroughHierarchyChangeListener mPassThroughListener;
 
     public CompoundButtonGroup(Context context) {
-        super(context);
-        init(context, null);
+        this(context, null);
     }
 
     public CompoundButtonGroup(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs);
+        this(context, attrs, 0);
     }
 
     public CompoundButtonGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
-    }
-
-    private void init(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.CompoundButtonGroup);
-        mCheckMode = typedArray.getInt(R.styleable.CompoundButtonGroup_cbg_checkMode, mCheckMode);
-        setMinCheckedCount(typedArray.getInt(R.styleable.CompoundButtonGroup_cbg_minCheckedCount, mMinCheckedCount));
-        typedArray.recycle();
-    }
-
-    public void setCheckMode(@CheckMode int checkMode) {
-        if (mCheckMode == checkMode) {
-            return;
+        if (typedArray.hasValue(R.styleable.CompoundButtonGroup_cbg_minCheckedCount)) {
+            setMinCheckedCount(typedArray.getInt(R.styleable.CompoundButtonGroup_cbg_minCheckedCount, mMinCheckedCount));
         }
-        mCheckMode = checkMode;
-        // clear previous state
-        clearCheck();
+        if (typedArray.hasValue(R.styleable.CompoundButtonGroup_cbg_maxCheckedCount)) {
+            setMaxCheckedCount(typedArray.getInt(R.styleable.CompoundButtonGroup_cbg_maxCheckedCount, mMaxCheckedCount));
+        }
+        typedArray.recycle();
+
+        mChildOnCheckedChangeListener = new CheckedStateTracker();
+        mPassThroughListener = new PassThroughHierarchyChangeListener();
+        super.setOnHierarchyChangeListener(mPassThroughListener);
     }
 
-    @CheckMode
-    public int getCheckMode() {
-        return mCheckMode;
+    @Override
+    public void setOnHierarchyChangeListener(OnHierarchyChangeListener listener) {
+        // the user listener is delegated to our pass-through listener
+        mPassThroughListener.mOnHierarchyChangeListener = listener;
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        refreshButtonState();
     }
 
     /**
-     * 设置最少选中个数，多选情况下才生效
+     * 设置最小选中个数
      *
-     * @param minCheckedCount
+     * @param minCheckedCount 0 <= {@code minCheckedCount} <= {@code maxCheckedCount}
      */
     public void setMinCheckedCount(int minCheckedCount) {
         if (minCheckedCount < 0) {
             minCheckedCount = 0;
+        } else if (minCheckedCount >= mMaxCheckedCount) {
+            throw new IllegalArgumentException("MinCheckedCount cannot be greater than maxCheckedCount.");
         }
         mMinCheckedCount = minCheckedCount;
     }
@@ -99,106 +83,249 @@ public class CompoundButtonGroup extends LinearLayout {
         return mMinCheckedCount;
     }
 
-    public void clearCheck() {
-        mCheckStates.clear();
-        mCheckedItemCount = 0;
-        updateCompoundButtons();
-    }
-
-    public SparseBooleanArray getCheckStates() {
-        return mCheckStates.clone();
-    }
-
-    public void toggle(@IdRes int id) {
-        View checkedView = findViewById(id);
-        if (checkedView != null && checkedView instanceof CompoundButton) {
-            toggleInGroup((CompoundButton) checkedView);
+    /**
+     * 设置最大选中个数
+     *
+     * @param maxCheckedCount {@code maxCheckedCount} > {@code minCheckedCount} >= 0
+     */
+    public void setMaxCheckedCount(int maxCheckedCount) {
+        if (maxCheckedCount <= 0) {
+            maxCheckedCount = Integer.MAX_VALUE;
+        } else if (maxCheckedCount <= mMinCheckedCount) {
+            throw new IllegalArgumentException("MaxCheckedCount cannot be less than minCheckedCount.");
         }
+        mMaxCheckedCount = maxCheckedCount;
     }
 
-    public void setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
-        mOnCheckedChangeListener = onCheckedChangeListener;
+    public int getMaxCheckedCount() {
+        return mMaxCheckedCount;
     }
 
-    private void toggleInGroup(CompoundButton buttonView) {
-        final int id = buttonView.getId();
-        boolean checkedStateChanged = updateCheckState(id);
-        if (!checkedStateChanged) {
-            // 设置checkedView的checked状态与mCheckStates的一致
-            mProtectFromCheckedChange = true;
-            buttonView.setChecked(mCheckStates.get(id));
-            mProtectFromCheckedChange = false;
-        } else {
-            updateCompoundButtons();
-        }
-        if (checkedStateChanged && mOnCheckedChangeListener != null) {
-            mOnCheckedChangeListener.onCheckedChanged(buttonView, buttonView.isChecked());
-        }
+    public void setOnCheckedChangeListener(OnCheckedChangeListener listener) {
+        mOnCheckedChangeListener = listener;
     }
 
-    private boolean updateCheckState(@IdRes int viewId) {
-        boolean changed = true;
-        if (mCheckMode == CHECK_MODE_SINGLE) {
-            boolean checked = !mCheckStates.get(viewId, false);
-            if (checked) {
-                mCheckStates.clear();
-                mCheckStates.put(viewId, true);
-                mCheckedItemCount = 1;
-            } else if (mCheckStates.size() == 0 || !mCheckStates.valueAt(0)) {
-                mCheckedItemCount = 0;
-            }
-        } else if (mCheckMode == CHECK_MODE_MULTIPLE) {
-            boolean checked = !mCheckStates.get(viewId, false);
-            // 判断能否取消选中,不能取消的话重新设置为选中
-            if (!checked && mCheckedItemCount - 1 < mMinCheckedCount) {
-                changed = false;
-            } else {
-                mCheckStates.put(viewId, checked);
-                if (checked) {
-                    mCheckedItemCount++;
-                } else {
-                    mCheckedItemCount--;
-                }
-            }
-        }
-        return changed;
-    }
-
-    private void updateCompoundButtons() {
-        mProtectFromCheckedChange = true;
-        final int count = getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            if (child instanceof CompoundButton) {
-                ((CompoundButton) child).setChecked(mCheckStates.get(child.getId(), false));
-            }
-        }
-        mProtectFromCheckedChange = false;
-    }
-
-    @Override
-    public void onViewAdded(View child) {
-        super.onViewAdded(child);
-        if (child instanceof CompoundButton) {
-            final CompoundButton button = (CompoundButton) child;
-            int id = child.getId();
-            // generates an id if it's missing
-            if (id == View.NO_ID) {
-                id = ViewUtils.generateViewId();
-                child.setId(id);
-            }
+    /**
+     * Returns the set of checked button ids.
+     *
+     * @return A new array which contains the id of each checked button.
+     */
+    public int[] getCheckedButtonIds() {
+        final SparseArray<CompoundButton> buttons = mButtons;
+        final int checkedCount = mCheckedCount;
+        final int[] ids = new int[checkedCount];
+        CompoundButton button;
+        int j = 0, size = buttons.size();
+        for (int i = 0; i < size && j <= checkedCount; i++) {
+            button = buttons.valueAt(i);
             if (button.isChecked()) {
-                toggleInGroup(button);
+                ids[j++] = button.getId();
             }
-            button.setOnCheckedChangeListener(mChildCheckedChangeListener);
         }
+        return ids;
+    }
+
+    public int getCheckedCount() {
+        return mCheckedCount;
     }
 
     @Override
-    public void onViewRemoved(View child) {
-        super.onViewRemoved(child);
-        if (child instanceof CompoundButton) {
-            ((CompoundButton) child).setOnCheckedChangeListener(null);
+    public LayoutParams generateLayoutParams(AttributeSet attrs) {
+        return new CompoundButtonGroup.LayoutParams(getContext(), attrs);
+    }
+
+    @Override
+    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
+        return p instanceof CompoundButtonGroup.LayoutParams;
+    }
+
+    @Override
+    protected LinearLayout.LayoutParams generateDefaultLayoutParams() {
+        return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public CharSequence getAccessibilityClassName() {
+        return CompoundButtonGroup.class.getName();
+    }
+
+    /**
+     * <p>This set of layout parameters defaults the width and the height of
+     * the children to {@link #WRAP_CONTENT} when they are not specified in the
+     * XML file. Otherwise, this class used the value read from the XML file.</p>
+     * <p>
+     * <p>See
+     * {@link android.R.styleable#LinearLayout_Layout LinearLayout Attributes}
+     * for a list of all child view attributes that this class supports.</p>
+     */
+    public static class LayoutParams extends LinearLayout.LayoutParams {
+
+        /**
+         * {@inheritDoc}
+         */
+        public LayoutParams(Context c, AttributeSet attrs) {
+            super(c, attrs);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public LayoutParams(int w, int h) {
+            super(w, h);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public LayoutParams(int w, int h, float initWeight) {
+            super(w, h, initWeight);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public LayoutParams(ViewGroup.LayoutParams p) {
+            super(p);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public LayoutParams(MarginLayoutParams source) {
+            super(source);
+        }
+
+        /**
+         * <p>Fixes the child's width to
+         * {@link android.view.ViewGroup.LayoutParams#WRAP_CONTENT} and the child's
+         * height to  {@link android.view.ViewGroup.LayoutParams#WRAP_CONTENT}
+         * when not specified in the XML file.</p>
+         *
+         * @param a          the styled attributes set
+         * @param widthAttr  the width attribute to fetch
+         * @param heightAttr the height attribute to fetch
+         */
+        @Override
+        protected void setBaseAttributes(TypedArray a,
+                                         int widthAttr, int heightAttr) {
+
+            if (a.hasValue(widthAttr)) {
+                width = a.getLayoutDimension(widthAttr, "layout_width");
+            } else {
+                width = WRAP_CONTENT;
+            }
+
+            if (a.hasValue(heightAttr)) {
+                height = a.getLayoutDimension(heightAttr, "layout_height");
+            } else {
+                height = WRAP_CONTENT;
+            }
         }
     }
+
+    /**
+     * <p>Interface definition for a callback to be invoked when the checked
+     * checkbox changed in this group.</p>
+     */
+    public interface OnCheckedChangeListener {
+
+        public void onCheckedChanged(CompoundButtonGroup group, @IdRes int checkedId, boolean isChecked);
+    }
+
+    /**
+     * 根据当前选中的CompoundButton个数，刷新CompoundButton的状态<p></p>
+     * 若checkedCount>=maxCheckedCount，则已选中的CompoundButton可反选，未选中的不可选</br>
+     * 若checkedCount<=minCheckedCount，则已选中的CompoundButton不可反选，未选中的可选</br>
+     * 若minCheckedCount<checkedCount<maxCheckedCount，则无限制
+     */
+    private void refreshButtonState() {
+        final int checkedCount = mCheckedCount;
+        if (checkedCount > mMaxCheckedCount || checkedCount < mMinCheckedCount) {
+            throw new IllegalArgumentException("CheckedCount: " + mCheckedCount +
+                    ", MaxCheckedCount: " + mMaxCheckedCount + ", MinCheckedCount: " + mMinCheckedCount);
+        }
+
+        final SparseArray<CompoundButton> buttons = mButtons;
+        boolean checkedViewState, uncheckedViewState;
+        if (checkedCount >= mMaxCheckedCount) {
+            checkedViewState = true;
+            uncheckedViewState = false;
+        } else if (checkedCount <= mMinCheckedCount) {
+            checkedViewState = false;
+            uncheckedViewState = true;
+        } else {
+            checkedViewState = true;
+            uncheckedViewState = true;
+        }
+        CompoundButton button;
+        for (int i = 0, size = buttons.size(); i < size; i++) {
+            button = buttons.valueAt(i);
+            button.setClickable(button.isChecked() ?
+                    checkedViewState : uncheckedViewState);
+        }
+    }
+
+
+    private class CheckedStateTracker implements CompoundButton.OnCheckedChangeListener {
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked) {
+                mCheckedCount++;
+            } else {
+                mCheckedCount--;
+            }
+            refreshButtonState();
+
+            if (mOnCheckedChangeListener != null) {
+                mOnCheckedChangeListener.onCheckedChanged(CompoundButtonGroup.this,
+                        buttonView.getId(), isChecked);
+            }
+        }
+    }
+
+    /**
+     * <p>A pass-through listener acts upon the events and dispatches them
+     * to another listener. This allows the table layout to set its own internal
+     * hierarchy change listener without preventing the user to setup his.</p>
+     */
+    private class PassThroughHierarchyChangeListener implements
+            ViewGroup.OnHierarchyChangeListener {
+        private ViewGroup.OnHierarchyChangeListener mOnHierarchyChangeListener;
+
+        public void onChildViewAdded(View parent, View child) {
+            if (parent == CompoundButtonGroup.this && child instanceof CompoundButton) {
+                final CompoundButton button = (CompoundButton) child;
+                button.setOnCheckedChangeListener(mChildOnCheckedChangeListener);
+                if (button.isChecked()) {
+                    mCheckedCount++;
+                }
+                // generates an id if it's missing
+                int id = child.getId();
+                if (id == View.NO_ID) {
+                    id = child.hashCode();
+                    child.setId(id);
+                }
+                mButtons.put(id, button);
+            }
+
+            if (mOnHierarchyChangeListener != null) {
+                mOnHierarchyChangeListener.onChildViewAdded(parent, child);
+            }
+        }
+
+        public void onChildViewRemoved(View parent, View child) {
+            if (parent == CompoundButtonGroup.this && child instanceof CompoundButton) {
+                final CompoundButton button = (CompoundButton) child;
+                button.setOnCheckedChangeListener(null);
+                if (button.isChecked()) {
+                    mCheckedCount--;
+                }
+                mButtons.remove(child.getId());
+            }
+
+            if (mOnHierarchyChangeListener != null) {
+                mOnHierarchyChangeListener.onChildViewRemoved(parent, child);
+            }
+        }
+    }
+
 }

@@ -18,131 +18,38 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="clearCheck"
-                android:text="clear"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="singleMode"
-                android:text="single"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="multipleMode"
-                android:text="multiple"/>
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="toggle"
-                android:text="toggle"/>
-        </LinearLayout>
-
         <com.benio.demoproject.compoundbutton.CompoundButtonGroup
-            android:id="@+id/cbg_single"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <RadioButton
-                android:id="@+id/rb_single_option1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:gravity="center"
-                android:text="1"/>
-
-            <RadioButton
-                android:id="@+id/rb_single_option2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:gravity="center"
-                android:text="2"/>
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="3"/>
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="4"/>
-        </com.benio.demoproject.compoundbutton.CompoundButtonGroup>
-
-        <com.benio.demoproject.compoundbutton.CompoundButtonGroup
-            android:id="@+id/cbg_multiple"
+            android:id="@+id/compound_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:cbg_checkMode="multiple">
+            app:cbg_maxCheckedCount="3"
+            app:cbg_minCheckedCount="1">
 
             <CheckBox
-                android:id="@+id/cb_multiple_option1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="1"/>
-
-            <CheckBox
-                android:id="@+id/cb_multiple_option2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                android:gravity="center"
+                android:text="1"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:gravity="center"
                 android:text="2"/>
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="false"
+                android:gravity="center"
                 android:text="3"/>
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"/>
-        </com.benio.demoproject.compoundbutton.CompoundButtonGroup>
-
-        <com.benio.demoproject.compoundbutton.CompoundButtonGroup
-            android:id="@+id/cbg_multiple_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:cbg_checkMode="multiple"
-            app:cbg_minCheckedCount="2">
-
-            <CheckBox
-                android:id="@+id/cb_multiple2_option1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="1"/>
-
-            <CheckBox
-                android:id="@+id/cb_multiple2_option2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="2"/>
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="3"/>
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:gravity="center"
                 android:text="4"/>
         </com.benio.demoproject.compoundbutton.CompoundButtonGroup>
 
