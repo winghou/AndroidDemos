@@ -3,6 +3,7 @@ package com.benio.demoproject.compoundbutton;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.benio.demoproject.R;
@@ -38,10 +39,18 @@ public class CompoundButtonActivity extends AppCompatActivity {
                 .setRadioLayoutResource(R.layout.item_tab_group)
                 .attachTo(radioGroup4);
 
-        CompoundButtonGroup compoundButtonGroup = (CompoundButtonGroup) findViewById(R.id.compound_group);
-        compoundButtonGroup.setOnCheckedChangeListener(new CompoundButtonGroup.OnCheckedChangeListener() {
+        CompoundGroup compoundGroup = (CompoundGroup) findViewById(R.id.compound_group);
+        compoundGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButtonGroup group, int checkedId, boolean isChecked) {
+            public void onCheckedChanged(ViewGroup group, int checkedId, boolean isChecked) {
+                Log.d(TAG, "onCheckedChanged() called with: checkedId = [" + checkedId + "], isChecked = [" + isChecked + "]");
+            }
+        });
+
+        ToggleGroup toggleGroup = (ToggleGroup) findViewById(R.id.toggle_group);
+        toggleGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ViewGroup group, int checkedId, boolean isChecked) {
                 Log.d(TAG, "onCheckedChanged() called with: checkedId = [" + checkedId + "], isChecked = [" + isChecked + "]");
             }
         });

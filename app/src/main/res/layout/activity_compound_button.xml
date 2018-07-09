@@ -18,12 +18,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.benio.demoproject.compoundbutton.CompoundButtonGroup
+        <com.benio.demoproject.compoundbutton.CompoundGroup
             android:id="@+id/compound_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cbg_maxCheckedCount="3"
-            app:cbg_minCheckedCount="1">
+            app:cg_maxCheckedCount="3"
+            app:cg_minCheckedCount="1">
 
             <CheckBox
                 android:layout_width="wrap_content"
@@ -51,7 +51,36 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="4"/>
-        </com.benio.demoproject.compoundbutton.CompoundButtonGroup>
+        </com.benio.demoproject.compoundbutton.CompoundGroup>
+
+        <com.benio.demoproject.compoundbutton.ToggleGroup
+            android:id="@+id/toggle_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cg_maxCheckedCount="2"
+            app:cg_minCheckedCount="1">
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:gravity="center"
+                android:text="1"/>
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="2"/>
+
+            <ToggleButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:gravity="center"
+                android:text="3"/>
+
+        </com.benio.demoproject.compoundbutton.ToggleGroup>
 
         <TextView
             android:layout_width="wrap_content"

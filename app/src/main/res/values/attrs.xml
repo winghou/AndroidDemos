@@ -71,9 +71,17 @@
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="CompoundButtonGroup">
-        <attr name="cbg_minCheckedCount" format="integer|reference"/>
-        <attr name="cbg_maxCheckedCount" format="integer|reference"/>
+    <attr name="cg_minCheckedCount" format="integer|reference"/>
+    <attr name="cg_maxCheckedCount" format="integer|reference"/>
+
+    <declare-styleable name="CompoundGroup">
+        <attr name="cg_minCheckedCount"/>
+        <attr name="cg_maxCheckedCount"/>
+    </declare-styleable>
+
+    <declare-styleable name="ToggleGroup">
+        <attr name="cg_minCheckedCount"/>
+        <attr name="cg_maxCheckedCount"/>
     </declare-styleable>
 
     <declare-styleable name="BadgeRadioButton">
