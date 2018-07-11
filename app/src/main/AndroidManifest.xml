@@ -82,6 +82,8 @@
         </activity>
         <activity android:name=".video.TextureViewActivity">
         </activity>
+        <activity android:name=".snackbar.SnackbarActivity">
+        </activity>
     </application>
 
 </manifest>

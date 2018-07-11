@@ -25,6 +25,7 @@ import com.benio.demoproject.hencoder.HenCoderActivity;
 import com.benio.demoproject.pinnedsection.PinnedSectionActivity;
 import com.benio.demoproject.progress.ProgressActivity;
 import com.benio.demoproject.share.ShareTextResultActivity;
+import com.benio.demoproject.snackbar.SnackbarActivity;
 import com.benio.demoproject.span.SpanActivity;
 import com.benio.demoproject.video.VideoActivity;
 import com.benio.demoproject.web.WebViewActivity;
@@ -46,7 +47,8 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("Badge", BadgeActivity.class),
             new DemoInfo("HenCoder", HenCoderActivity.class),
             new DemoInfo("ConstraintLayout", ConstraintLayoutActivity.class),
-            new DemoInfo("Video", VideoActivity.class)
+            new DemoInfo("Video", VideoActivity.class),
+            new DemoInfo("Snackbar", SnackbarActivity.class),
     };
 
     @Override
