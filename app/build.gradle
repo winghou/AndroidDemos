@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
     buildToolsVersion "26.0.2"
 
     defaultConfig {
         applicationId "com.benio.demoproject"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
     }
@@ -22,10 +22,10 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:25.4.0'
-    compile 'com.android.support:gridlayout-v7:25.4.0'
-    compile 'com.android.support:recyclerview-v7:25.4.0'
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support:gridlayout-v7:27.1.1'
+    compile 'com.android.support:recyclerview-v7:27.1.1'
     compile 'de.halfbit:pinned-section-listview:1.0.0'
-    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:design:27.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.1.0-beta4'
 }
