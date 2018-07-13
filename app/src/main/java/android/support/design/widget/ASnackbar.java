@@ -4,12 +4,11 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.design.R;
 import android.support.design.internal.SnackbarContentLayout;
-import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -278,6 +277,41 @@ public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
         final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
         final TextView tv = contentLayout.getMessageView();
         tv.setTextColor(colors);
+        return this;
+    }
+
+    @NonNull
+    public ASnackbar setDrawablePadding(int padding) {
+        final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
+        final TextView tv = contentLayout.getMessageView();
+        tv.setCompoundDrawablePadding(padding);
+        return this;
+    }
+
+    @NonNull
+    public ASnackbar setDrawables(@Nullable Drawable left, @Nullable Drawable top,
+                                  @Nullable Drawable right, @Nullable Drawable bottom) {
+        final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
+        final TextView tv = contentLayout.getMessageView();
+        tv.setCompoundDrawables(left, top, right, bottom);
+        return this;
+    }
+
+    @NonNull
+    public ASnackbar setDrawablesWithIntrinsicBounds(@Nullable Drawable left, @Nullable Drawable top,
+                                                     @Nullable Drawable right, @Nullable Drawable bottom) {
+        final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
+        final TextView tv = contentLayout.getMessageView();
+        tv.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+        return this;
+    }
+
+    @NonNull
+    public ASnackbar setDrawablesWithIntrinsicBounds(@DrawableRes int left, @DrawableRes int top,
+                                                     @DrawableRes int right, @DrawableRes int bottom) {
+        final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
+        final TextView tv = contentLayout.getMessageView();
+        tv.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
         return this;
     }
 }

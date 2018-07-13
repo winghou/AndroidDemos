@@ -33,6 +33,9 @@ public class SnackbarActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.btn_anim_1).setOnClickListener(this);
         findViewById(R.id.btn_anim_2).setOnClickListener(this);
         findViewById(R.id.btn_margin).setOnClickListener(this);
+        findViewById(R.id.btn_drawable_horizontal).setOnClickListener(this);
+        findViewById(R.id.btn_drawable_vertical).setOnClickListener(this);
+        findViewById(R.id.btn_drawable_padding).setOnClickListener(this);
     }
 
     @Override
@@ -91,6 +94,21 @@ public class SnackbarActivity extends AppCompatActivity implements View.OnClickL
                 int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
                         getResources().getDisplayMetrics());
                 aSnackbar.setMargins(margin, margin, margin, margin);
+                break;
+            case R.id.btn_drawable_horizontal:
+                aSnackbar.setDrawablesWithIntrinsicBounds(R.mipmap.tab_bar_message_icon, 0,
+                        R.mipmap.tab_bar_message_icon, 0);
+                break;
+            case R.id.btn_drawable_vertical:
+                aSnackbar.setDrawablesWithIntrinsicBounds(0, R.mipmap.tab_bar_message_icon,
+                        0, R.mipmap.tab_bar_message_icon);
+                break;
+            case R.id.btn_drawable_padding:
+                int pad = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8,
+                        getResources().getDisplayMetrics());
+                aSnackbar.setDrawablesWithIntrinsicBounds(R.mipmap.tab_bar_message_icon, 0,
+                        0, 0)
+                        .setDrawablePadding(pad);
                 break;
         }
         aSnackbar.show();
