@@ -4,8 +4,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.ASnackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.benio.demoproject.R;
@@ -28,6 +30,9 @@ public class SnackbarActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.btn_gravity_bottom).setOnClickListener(this);
         findViewById(R.id.btn_bg_color).setOnClickListener(this);
         findViewById(R.id.btn_bg_radius).setOnClickListener(this);
+        findViewById(R.id.btn_anim_1).setOnClickListener(this);
+        findViewById(R.id.btn_anim_2).setOnClickListener(this);
+        findViewById(R.id.btn_margin).setOnClickListener(this);
     }
 
     @Override
@@ -36,7 +41,8 @@ public class SnackbarActivity extends AppCompatActivity implements View.OnClickL
                 .setAction("action", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(SnackbarActivity.this, "Hello world~", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SnackbarActivity.this, "Hello world~",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
         switch (v.getId()) {
@@ -72,6 +78,19 @@ public class SnackbarActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.btn_bg_radius:
                 aSnackbar.setBackgroundResource(R.drawable.snackbar_bg_with_corners_and_stroke);
+                break;
+            case R.id.btn_anim_1:
+                aSnackbar.setAnimation(AnimationUtils.makeInAnimation(this, true),
+                        AnimationUtils.makeOutAnimation(this, true)
+                );
+                break;
+            case R.id.btn_anim_2:
+                aSnackbar.setAnimation(android.R.anim.fade_in, android.R.anim.fade_out);
+                break;
+            case R.id.btn_margin:
+                int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
+                        getResources().getDisplayMetrics());
+                aSnackbar.setMargins(margin, margin, margin, margin);
                 break;
         }
         aSnackbar.show();

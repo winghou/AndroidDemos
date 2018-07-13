@@ -1,31 +1,22 @@
 package android.support.design.widget;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.design.R;
 import android.support.design.internal.SnackbarContentLayout;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import static android.support.design.widget.AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR;
 
 /**
  * 与{@link Snackbar}一致。提供更多的自定义API
@@ -33,7 +24,7 @@ import static android.support.design.widget.AnimationUtils.FAST_OUT_SLOW_IN_INTE
  * https://github.com/HuanHaiLiuXin/SnackbarUtils/blob/master/MSnackBar/app/src/main/java/com/jet/msnackbar/SnackbarUtils.java
  * Created by zhangzhibin on 2018/6/30.
  */
-public final class ASnackbar extends HackyBaseTransientBottomBar<ASnackbar> {
+public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
     /**
      * Show the Snackbar indefinitely. This means that the Snackbar will be displayed from the time
      * that is {@link #show() shown} until either it is dismissed, or another Snackbar is shown.
@@ -96,8 +87,6 @@ public final class ASnackbar extends HackyBaseTransientBottomBar<ASnackbar> {
             // Stub implementation to make API check happy.
         }
     }
-
-    private int mGravity = Gravity.BOTTOM;
 
     private ASnackbar(@NonNull ViewGroup parent, @NonNull View content, @NonNull ContentViewCallback contentViewCallback) {
         super(parent, content, contentViewCallback);
@@ -187,261 +176,6 @@ public final class ASnackbar extends HackyBaseTransientBottomBar<ASnackbar> {
 
         // If we reach here then we didn't find a CoL or a suitable content view so we'll fallback
         return fallback;
-    }
-
-    @Override
-    void animateViewIn() {
-        switch (mGravity & Gravity.VERTICAL_GRAVITY_MASK) {
-            case Gravity.TOP:
-                animateViewInFromTop();
-                break;
-            case Gravity.CENTER_VERTICAL:
-                animateViewInFromCenter();
-                break;
-            case Gravity.BOTTOM:
-            default:
-                super.animateViewIn();
-                break;
-        }
-    }
-
-    private void animateViewInFromTop() {
-        if (Build.VERSION.SDK_INT >= 99) {
-            final int viewHeight = -mView.getHeight();
-            if (USE_OFFSET_API) {
-                ViewCompat.offsetTopAndBottom(mView, viewHeight);
-            } else {
-                mView.setTranslationY(viewHeight);
-            }
-            final ValueAnimator animator = new ValueAnimator();
-            animator.setIntValues(viewHeight, 0);
-            animator.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-            animator.setDuration(ANIMATION_DURATION);
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                    mContentViewCallback.animateContentIn(
-                            ANIMATION_DURATION - ANIMATION_FADE_DURATION,
-                            ANIMATION_FADE_DURATION);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    onViewShown();
-                }
-            });
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                private int mPreviousAnimatedIntValue = viewHeight;
-
-                @Override
-                public void onAnimationUpdate(ValueAnimator animator) {
-                    int currentAnimatedIntValue = (int) animator.getAnimatedValue();
-                    if (USE_OFFSET_API) {
-                        ViewCompat.offsetTopAndBottom(mView,
-                                currentAnimatedIntValue - mPreviousAnimatedIntValue);
-                    } else {
-                        mView.setTranslationY(currentAnimatedIntValue);
-                    }
-                    mPreviousAnimatedIntValue = currentAnimatedIntValue;
-                }
-            });
-            animator.start();
-        } else {
-            final Animation anim = new TranslateAnimation(
-                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
-                    Animation.RELATIVE_TO_SELF, -1f, Animation.RELATIVE_TO_SELF, 0f
-            );
-            anim.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-            anim.setDuration(ANIMATION_DURATION);
-            anim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    onViewShown();
-                }
-
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            mView.startAnimation(anim);
-        }
-    }
-
-    private void animateViewInFromCenter() {
-        if (Build.VERSION.SDK_INT >= 12) {
-            mView.setAlpha(1f);
-            final ValueAnimator animator = new ValueAnimator();
-            animator.setFloatValues(0f, 1f);
-            animator.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-            animator.setDuration(ANIMATION_DURATION);
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                    mContentViewCallback.animateContentIn(
-                            ANIMATION_DURATION - ANIMATION_FADE_DURATION,
-                            ANIMATION_FADE_DURATION);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    onViewShown();
-                }
-            });
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-                @Override
-                public void onAnimationUpdate(ValueAnimator animator) {
-                    float currentAnimatedValue = (float) animator.getAnimatedValue();
-                    mView.setAlpha(currentAnimatedValue);
-                }
-            });
-            animator.start();
-        } else {
-            final Animation anim = new AlphaAnimation(0f, 1f);
-            anim.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-            anim.setDuration(ANIMATION_DURATION);
-            anim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    onViewShown();
-                }
-
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            mView.startAnimation(anim);
-        }
-    }
-
-    @Override
-    void animateViewOut(int event) {
-        switch (mGravity & Gravity.VERTICAL_GRAVITY_MASK) {
-            case Gravity.TOP:
-                animateViewOutFromTop(event);
-                break;
-            case Gravity.CENTER_VERTICAL:
-                animateViewOutFromCenter(event);
-                break;
-            case Gravity.BOTTOM:
-            default:
-                super.animateViewOut(event);
-                break;
-        }
-    }
-
-    private void animateViewOutFromTop(final int event) {
-        if (Build.VERSION.SDK_INT >= 99) {
-            final ValueAnimator animator = new ValueAnimator();
-            animator.setIntValues(0, -mView.getHeight());
-            animator.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-            animator.setDuration(ANIMATION_DURATION);
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                    mContentViewCallback.animateContentOut(0, ANIMATION_FADE_DURATION);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    onViewHidden(event);
-                }
-            });
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                private int mPreviousAnimatedIntValue = 0;
-
-                @Override
-                public void onAnimationUpdate(ValueAnimator animator) {
-                    int currentAnimatedIntValue = (int) animator.getAnimatedValue();
-                    if (USE_OFFSET_API) {
-                        ViewCompat.offsetTopAndBottom(mView,
-                                currentAnimatedIntValue - mPreviousAnimatedIntValue);
-                    } else {
-                        mView.setTranslationY(currentAnimatedIntValue);
-                    }
-                    mPreviousAnimatedIntValue = currentAnimatedIntValue;
-                }
-            });
-            animator.start();
-        } else {
-            final TranslateAnimation anim = new TranslateAnimation(
-                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
-                    Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, -1f
-            );
-            anim.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-            anim.setDuration(ANIMATION_DURATION);
-            anim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    onViewHidden(event);
-                }
-
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            mView.startAnimation(anim);
-        }
-    }
-
-    private void animateViewOutFromCenter(final int event) {
-        if (Build.VERSION.SDK_INT >= 12) {
-            final ValueAnimator animator = new ValueAnimator();
-            animator.setFloatValues(1f, 0f);
-            animator.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-            animator.setDuration(ANIMATION_DURATION);
-            animator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationStart(Animator animator) {
-                    mContentViewCallback.animateContentOut(0, ANIMATION_FADE_DURATION);
-                }
-
-                @Override
-                public void onAnimationEnd(Animator animator) {
-                    onViewHidden(event);
-                }
-            });
-            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-                @Override
-                public void onAnimationUpdate(ValueAnimator animator) {
-                    float currentAnimatedValue = (float) animator.getAnimatedValue();
-                    mView.setAlpha(currentAnimatedValue);
-                }
-            });
-            animator.start();
-        } else {
-            final Animation anim = new AlphaAnimation(1f, 0f);
-            anim.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
-            anim.setDuration(ANIMATION_DURATION);
-            anim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    onViewHidden(event);
-                }
-
-                @Override
-                public void onAnimationStart(Animation animation) {
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-                }
-            });
-            mView.startAnimation(anim);
-        }
     }
 
     /**
@@ -544,51 +278,6 @@ public final class ASnackbar extends HackyBaseTransientBottomBar<ASnackbar> {
         final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
         final TextView tv = contentLayout.getMessageView();
         tv.setTextColor(colors);
-        return this;
-    }
-
-    @NonNull
-    public ASnackbar setGravity(int gravity) {
-        View view = mView;
-        ViewGroup.LayoutParams p = view.getLayoutParams();
-        if (p instanceof FrameLayout.LayoutParams) {
-            ((FrameLayout.LayoutParams) p).gravity = gravity;
-            view.setLayoutParams(p);
-            mGravity = gravity;
-        } else if (p instanceof CoordinatorLayout.LayoutParams) {
-            ((CoordinatorLayout.LayoutParams) p).gravity = gravity;
-            view.setLayoutParams(p);
-            mGravity = gravity;
-        }
-        return this;
-    }
-
-    @NonNull
-    public ASnackbar setMargins(int left, int top, int right, int bottom) {
-        View view = mView;
-        ViewGroup.LayoutParams p = view.getLayoutParams();
-        if (p instanceof ViewGroup.MarginLayoutParams) {
-            ((ViewGroup.MarginLayoutParams) p).setMargins(left, top, right, bottom);
-            view.setLayoutParams(p);
-        }
-        return this;
-    }
-
-    @NonNull
-    public ASnackbar setBackgroundColor(@ColorInt int color) {
-        mView.setBackgroundColor(color);
-        return this;
-    }
-
-    @NonNull
-    public ASnackbar setBackgroundResource(@DrawableRes int resId) {
-        mView.setBackgroundResource(resId);
-        return this;
-    }
-
-    @NonNull
-    public ASnackbar setBackground(Drawable drawable) {
-        ViewCompat.setBackground(mView, drawable);
         return this;
     }
 }
