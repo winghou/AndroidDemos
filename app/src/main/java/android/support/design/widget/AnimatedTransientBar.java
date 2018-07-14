@@ -29,6 +29,7 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
     private int mGravity = Gravity.BOTTOM;
     private Animation mInAnimation;
     private Animation mOutAnimation;
+    private boolean mAnimationEnabled = true;
 
     protected AnimatedTransientBar(@NonNull ViewGroup parent, @NonNull View content,
                                    @NonNull ContentViewCallback contentViewCallback) {
@@ -281,6 +282,17 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
         }
     }
 
+    @Override
+    boolean shouldAnimate() {
+        return super.shouldAnimate() && mAnimationEnabled;
+    }
+
+    @NonNull
+    public B setAnimationEnabled(boolean animationEnabled) {
+        mAnimationEnabled = animationEnabled;
+        return (B) this;
+    }
+
     @NonNull
     public B setAnimation(@AnimRes int in, @AnimRes int out) {
         final Context context = getContext();
@@ -292,6 +304,7 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
 
     @NonNull
     public B setAnimation(Animation in, Animation out) {
+        mAnimationEnabled = true;
         mInAnimation = in;
         mOutAnimation = out;
         return (B) this;
@@ -311,6 +324,11 @@ public class AnimatedTransientBar<B extends BaseTransientBottomBar<B>> extends H
             mGravity = gravity;
         }
         return (B) this;
+    }
+
+    @NonNull
+    public B setMargins(int margin) {
+        return setMargins(margin, margin, margin, margin);
     }
 
     @NonNull

@@ -150,22 +150,31 @@
             app:layout_constraintTop_toBottomOf="@+id/btn_bg_color"/>
 
         <Button
-            android:id="@+id/btn_anim_1"
+            android:id="@+id/btn_anim_slide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="slide"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/btn_anim_2"
+            app:layout_constraintRight_toLeftOf="@+id/btn_anim_fade"
             app:layout_constraintTop_toBottomOf="@+id/tv_snackbar_anim"/>
 
         <Button
-            android:id="@+id/btn_anim_2"
+            android:id="@+id/btn_anim_fade"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="fade"
-            app:layout_constraintBaseline_toBaselineOf="@id/btn_anim_1"
-            app:layout_constraintLeft_toRightOf="@id/btn_anim_1"
+            app:layout_constraintBaseline_toBaselineOf="@id/btn_anim_slide"
+            app:layout_constraintLeft_toRightOf="@id/btn_anim_slide"
+            app:layout_constraintRight_toLeftOf="@+id/btn_anim_no"/>
+
+        <Button
+            android:id="@+id/btn_anim_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="无动画"
+            app:layout_constraintBaseline_toBaselineOf="@id/btn_anim_slide"
+            app:layout_constraintLeft_toRightOf="@id/btn_anim_fade"
             app:layout_constraintRight_toRightOf="parent"/>
 
         <TextView
@@ -173,7 +182,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="图标"
-            app:layout_constraintTop_toBottomOf="@+id/btn_anim_1"/>
+            app:layout_constraintTop_toBottomOf="@+id/btn_anim_slide"/>
 
         <Button
             android:id="@+id/btn_drawable_horizontal"

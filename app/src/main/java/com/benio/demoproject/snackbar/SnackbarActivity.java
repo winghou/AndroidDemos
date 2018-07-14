@@ -30,8 +30,9 @@ public class SnackbarActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.btn_gravity_bottom).setOnClickListener(this);
         findViewById(R.id.btn_bg_color).setOnClickListener(this);
         findViewById(R.id.btn_bg_radius).setOnClickListener(this);
-        findViewById(R.id.btn_anim_1).setOnClickListener(this);
-        findViewById(R.id.btn_anim_2).setOnClickListener(this);
+        findViewById(R.id.btn_anim_slide).setOnClickListener(this);
+        findViewById(R.id.btn_anim_fade).setOnClickListener(this);
+        findViewById(R.id.btn_anim_no).setOnClickListener(this);
         findViewById(R.id.btn_margin).setOnClickListener(this);
         findViewById(R.id.btn_drawable_horizontal).setOnClickListener(this);
         findViewById(R.id.btn_drawable_vertical).setOnClickListener(this);
@@ -82,13 +83,16 @@ public class SnackbarActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_bg_radius:
                 aSnackbar.setBackgroundResource(R.drawable.snackbar_bg_with_corners_and_stroke);
                 break;
-            case R.id.btn_anim_1:
+            case R.id.btn_anim_slide:
                 aSnackbar.setAnimation(AnimationUtils.makeInAnimation(this, true),
                         AnimationUtils.makeOutAnimation(this, true)
                 );
                 break;
-            case R.id.btn_anim_2:
+            case R.id.btn_anim_fade:
                 aSnackbar.setAnimation(android.R.anim.fade_in, android.R.anim.fade_out);
+                break;
+            case R.id.btn_anim_no:
+                aSnackbar.setAnimationEnabled(false);
                 break;
             case R.id.btn_margin:
                 int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
