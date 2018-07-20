@@ -84,6 +84,8 @@
         </activity>
         <activity android:name=".snackbar.SnackbarActivity">
         </activity>
+        <activity android:name=".dialog.DialogActivity">
+        </activity>
     </application>
 
 </manifest>

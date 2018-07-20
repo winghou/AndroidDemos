@@ -19,6 +19,7 @@ import com.benio.demoproject.compoundbutton.CompoundButtonActivity;
 import com.benio.demoproject.constraint.ConstraintLayoutActivity;
 import com.benio.demoproject.customview.CustomViewActivity;
 import com.benio.demoproject.db.SQLiteActivity;
+import com.benio.demoproject.dialog.DialogActivity;
 import com.benio.demoproject.fingerprint.FingerprintActivity;
 import com.benio.demoproject.gesturelock.LockActivity;
 import com.benio.demoproject.hencoder.HenCoderActivity;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("ConstraintLayout", ConstraintLayoutActivity.class),
             new DemoInfo("Video", VideoActivity.class),
             new DemoInfo("Snackbar", SnackbarActivity.class),
+            new DemoInfo("Dialog", DialogActivity.class),
     };
 
     @Override
