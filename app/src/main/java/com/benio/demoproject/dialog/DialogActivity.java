@@ -18,6 +18,8 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_dialog);
 
         findViewById(R.id.btn_message_dialog).setOnClickListener(this);
+        findViewById(R.id.btn_custom_dialog).setOnClickListener(this);
+        findViewById(R.id.btn_input_dialog).setOnClickListener(this);
     }
 
     @Override
@@ -26,18 +28,36 @@ public class DialogActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btn_message_dialog:
                 showMessageDialog();
                 break;
+            case R.id.btn_custom_dialog:
+                showCustomDialog();
+                break;
+            case R.id.btn_input_dialog:
+                showInputDialog();
+                break;
         }
     }
 
     private void showMessageDialog() {
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this)
                 .setTitle("Title")
-                .setIcon(android.R.drawable.ic_dialog_info)
-                .setMessage("long message, long message, long message, long message")
+                .setMessage("message")
                 .setNegativeButton("取消", null)
                 .setPositiveButton("确定", null)
-                .setNeutralButton("中立", null)
-                .create();
-        dialog.show();
+                .show();
+    }
+
+    private void showCustomDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("custom")
+                .setView(R.layout.dialog_fingerprint_authentication)
+                .show();
+    }
+
+    private void showInputDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("input")
+                .setView(R.layout.dialog_input)
+                .setPositiveButton("确定", null)
+                .show();
     }
 }
