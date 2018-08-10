@@ -88,6 +88,15 @@
             android:name=".dialog.DialogActivity"
             android:theme="@style/AppTheme.AlertDialog">
         </activity>
+        <activity android:name=".aidl.AIDLTestActivity">
+        </activity>
+
+        <service
+            android:name=".aidl.AIDLTestService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":remote">
+        </service>
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.benio.demoproject.adapterlayout.AdapterLayoutActivity;
+import com.benio.demoproject.aidl.AIDLTestActivity;
 import com.benio.demoproject.badge.BadgeActivity;
 import com.benio.demoproject.common.ViewHolder;
 import com.benio.demoproject.common.ViewHolderAdapter;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("Video", VideoActivity.class),
             new DemoInfo("Snackbar", SnackbarActivity.class),
             new DemoInfo("Dialog", DialogActivity.class),
+            new DemoInfo("AIDL", AIDLTestActivity.class),
     };
 
     @Override
