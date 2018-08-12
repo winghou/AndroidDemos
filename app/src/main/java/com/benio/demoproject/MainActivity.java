@@ -24,6 +24,7 @@ import com.benio.demoproject.dialog.DialogActivity;
 import com.benio.demoproject.fingerprint.FingerprintActivity;
 import com.benio.demoproject.gesturelock.LockActivity;
 import com.benio.demoproject.hencoder.HenCoderActivity;
+import com.benio.demoproject.messenger.MessengerClientActivity;
 import com.benio.demoproject.pinnedsection.PinnedSectionActivity;
 import com.benio.demoproject.progress.ProgressActivity;
 import com.benio.demoproject.share.ShareTextResultActivity;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("Snackbar", SnackbarActivity.class),
             new DemoInfo("Dialog", DialogActivity.class),
             new DemoInfo("AIDL", AIDLTestActivity.class),
+            new DemoInfo("Messenger", MessengerClientActivity.class),
     };
 
     @Override
