@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.design.R;
 import android.support.v4.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import java.lang.reflect.Field;
 import static android.support.design.widget.AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR;
 
 /**
- * Created by zhangzhibin on 2018/7/12.
+ * Created by benio on 2018/7/12.
  */
 public class HackyBaseTransientBottomBar<B extends BaseTransientBottomBar<B>> extends BaseTransientBottomBar<B> {
     private static final Handler sHackyHandler;
@@ -37,10 +36,14 @@ public class HackyBaseTransientBottomBar<B extends BaseTransientBottomBar<B>> ex
             public boolean handleMessage(Message message) {
                 switch (message.what) {
                     case MSG_SHOW:
-                        ((HackyBaseTransientBottomBar) message.obj).showView();
+                        ((BaseTransientBottomBar) message.obj).showView();
                         return true;
                     case MSG_DISMISS:
-                        ((HackyBaseTransientBottomBar) message.obj).hackyHideView(message.arg1);
+                        if (message.obj instanceof HackyBaseTransientBottomBar) {
+                            ((HackyBaseTransientBottomBar) message.obj).hackyHideView(message.arg1);
+                        } else {
+                            ((BaseTransientBottomBar) message.obj).hideView(message.arg1);
+                        }
                         return true;
                 }
                 return false;
@@ -60,7 +63,8 @@ public class HackyBaseTransientBottomBar<B extends BaseTransientBottomBar<B>> ex
 
     final ContentViewCallback mContentViewCallback;
 
-    protected HackyBaseTransientBottomBar(@NonNull ViewGroup parent, @NonNull View content, @NonNull ContentViewCallback contentViewCallback) {
+    protected HackyBaseTransientBottomBar(@NonNull ViewGroup parent, @NonNull View content,
+                                          @NonNull ContentViewCallback contentViewCallback) {
         super(parent, content, contentViewCallback);
         mContentViewCallback = contentViewCallback;
     }
@@ -119,7 +123,7 @@ public class HackyBaseTransientBottomBar<B extends BaseTransientBottomBar<B>> ex
             animator.start();
         } else {
             final Animation anim = AnimationUtils.loadAnimation(mView.getContext(),
-                    R.anim.design_snackbar_out);
+                    android.support.design.R.anim.design_snackbar_out);
             anim.setInterpolator(FAST_OUT_SLOW_IN_INTERPOLATOR);
             anim.setDuration(ANIMATION_DURATION);
             anim.setAnimationListener(new Animation.AnimationListener() {

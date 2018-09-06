@@ -2,14 +2,15 @@ package android.support.design.widget;
 
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.design.R;
 import android.support.design.internal.SnackbarContentLayout;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 /**
- * 与{@link Snackbar}一致。提供更多的自定义API
- * https://github.com/AndreiD/TSnackBar
- * https://github.com/HuanHaiLiuXin/SnackbarUtils/blob/master/MSnackBar/app/src/main/java/com/jet/msnackbar/SnackbarUtils.java
- * Created by zhangzhibin on 2018/6/30.
+ * Same as{@link Snackbar}, which provided more api.
+ * Created by benio on 2018/6/30.
  */
 public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
     /**
@@ -87,7 +86,10 @@ public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
         }
     }
 
-    private ASnackbar(@NonNull ViewGroup parent, @NonNull View content, @NonNull ContentViewCallback contentViewCallback) {
+    private int mGravity = Gravity.BOTTOM;
+
+    private ASnackbar(@NonNull ViewGroup parent, @NonNull View content,
+                      @NonNull ContentViewCallback contentViewCallback) {
         super(parent, content, contentViewCallback);
     }
 
@@ -120,7 +122,7 @@ public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
         final LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         final SnackbarContentLayout content =
                 (SnackbarContentLayout) inflater.inflate(
-                        R.layout.design_layout_snackbar_include, parent, false);
+                        android.support.design.R.layout.design_layout_snackbar_include, parent, false);
         final ASnackbar snackbar = new ASnackbar(parent, content, content);
         snackbar.setText(text);
         snackbar.setDuration(duration);
@@ -175,6 +177,33 @@ public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
 
         // If we reach here then we didn't find a CoL or a suitable content view so we'll fallback
         return fallback;
+    }
+
+    @Override
+    protected int animateAt() {
+        return mGravity;
+    }
+
+    public int getGravity() {
+        return mGravity;
+    }
+
+    @NonNull
+    public ASnackbar setGravity(int gravity) {
+        final View view = mView;
+        final ViewGroup.LayoutParams p = view.getLayoutParams();
+        if (p instanceof FrameLayout.LayoutParams
+                && ((FrameLayout.LayoutParams) p).gravity != gravity) {
+            ((FrameLayout.LayoutParams) p).gravity = gravity;
+            view.setLayoutParams(p);
+            mGravity = gravity;
+        } else if (p instanceof CoordinatorLayout.LayoutParams
+                && ((CoordinatorLayout.LayoutParams) p).gravity != gravity) {
+            ((CoordinatorLayout.LayoutParams) p).gravity = gravity;
+            view.setLayoutParams(p);
+            mGravity = gravity;
+        }
+        return this;
     }
 
     /**
@@ -289,29 +318,38 @@ public final class ASnackbar extends AnimatedTransientBar<ASnackbar> {
     }
 
     @NonNull
-    public ASnackbar setDrawables(@Nullable Drawable left, @Nullable Drawable top,
-                                  @Nullable Drawable right, @Nullable Drawable bottom) {
+    public ASnackbar setDrawable(Drawable drawable) {
         final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
         final TextView tv = contentLayout.getMessageView();
-        tv.setCompoundDrawables(left, top, right, bottom);
+        Drawable[] drawables = tv.getCompoundDrawables();
+        tv.setCompoundDrawables(drawable, drawables[1], drawables[2], drawables[3]);
         return this;
     }
 
     @NonNull
-    public ASnackbar setDrawablesWithIntrinsicBounds(@Nullable Drawable left, @Nullable Drawable top,
-                                                     @Nullable Drawable right, @Nullable Drawable bottom) {
+    public ASnackbar setDrawableWithIntrinsicBound(Drawable drawable) {
         final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
         final TextView tv = contentLayout.getMessageView();
-        tv.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+        Drawable[] drawables = tv.getCompoundDrawables();
+        tv.setCompoundDrawablesWithIntrinsicBounds(drawable, drawables[1], drawables[2], drawables[3]);
         return this;
     }
 
     @NonNull
-    public ASnackbar setDrawablesWithIntrinsicBounds(@DrawableRes int left, @DrawableRes int top,
-                                                     @DrawableRes int right, @DrawableRes int bottom) {
+    public ASnackbar setDrawableWithIntrinsicBound(@DrawableRes int drawable) {
+        return setDrawableWithIntrinsicBound(drawable != 0 ?
+                ContextCompat.getDrawable(getContext(), drawable) : null);
+    }
+
+    @NonNull
+    public ASnackbar setTextGravity(int gravity) {
         final SnackbarContentLayout contentLayout = (SnackbarContentLayout) mView.getChildAt(0);
         final TextView tv = contentLayout.getMessageView();
-        tv.setCompoundDrawablesWithIntrinsicBounds(left, top, right, bottom);
+        // reset text alignment
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            tv.setTextAlignment(View.TEXT_ALIGNMENT_INHERIT);
+        }
+        tv.setGravity(gravity);
         return this;
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.benio.demoproject">
+<manifest package="com.benio.demoproject"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -104,6 +104,8 @@
         </service>
 
         <activity android:name=".messenger.MessengerClientActivity">
+        </activity>
+        <activity android:name=".snackbar.ToastActivity">
         </activity>
     </application>
 
