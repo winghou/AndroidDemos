@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ListAdapter;
 
+import com.benio.demoproject.common.OnItemClickListener;
+import com.benio.demoproject.common.OnItemLongClickListener;
+
 /**
  * LinearLayout for {@link android.widget.BaseAdapter}
  * Created by zhangzhibin on 2016/10/19.

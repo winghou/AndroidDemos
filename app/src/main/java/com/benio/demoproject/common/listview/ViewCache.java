@@ -1,9 +1,11 @@
-package com.benio.demoproject.common;
+package com.benio.demoproject.common.listview;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.util.SparseArrayCompat;
 import android.view.View;
+
+import com.benio.demoproject.common.ViewFinder;
 
 /**
  * ViewFinder 实现类

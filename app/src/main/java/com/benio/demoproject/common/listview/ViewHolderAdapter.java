@@ -1,4 +1,4 @@
-package com.benio.demoproject.common;
+package com.benio.demoproject.common.listview;
 
 import android.view.View;
 import android.view.ViewGroup;

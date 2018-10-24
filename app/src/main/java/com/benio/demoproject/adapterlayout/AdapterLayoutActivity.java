@@ -15,8 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.benio.demoproject.R;
-import com.benio.demoproject.common.ViewHolder;
-import com.benio.demoproject.common.ViewHolderAdapter;
+import com.benio.demoproject.common.OnItemClickListener;
+import com.benio.demoproject.common.listview.ViewHolder;
+import com.benio.demoproject.common.listview.ViewHolderAdapter;
 
 import java.util.List;
 

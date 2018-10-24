@@ -1,4 +1,4 @@
-package com.benio.demoproject.adapterlayout;
+package com.benio.demoproject.common;
 
 import android.view.View;
 import android.view.ViewGroup;
