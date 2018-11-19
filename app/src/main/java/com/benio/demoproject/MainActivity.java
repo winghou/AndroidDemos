@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.benio.demoproject.adapterlayout.AdapterLayoutActivity;
 import com.benio.demoproject.aidl.AIDLTestActivity;
 import com.benio.demoproject.badge.BadgeActivity;
+import com.benio.demoproject.bluetooth.BluetoothActivity;
 import com.benio.demoproject.common.listview.ViewHolder;
 import com.benio.demoproject.common.listview.ViewHolderAdapter;
 import com.benio.demoproject.compoundbutton.CompoundButtonActivity;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
             new DemoInfo("Dialog", DialogActivity.class),
             new DemoInfo("AIDL", AIDLTestActivity.class),
             new DemoInfo("Messenger", MessengerClientActivity.class),
+            new DemoInfo("Bluetooth", BluetoothActivity.class),
     };
 
     @Override

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.benio.demoproject"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.benio.demoproject">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application
         android:allowBackup="true"
@@ -16,97 +18,76 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".customview.CustomViewActivity">
-        </activity>
-        <activity android:name=".progress.ProgressActivity">
-        </activity>
-        <activity android:name=".span.SpanActivity">
-        </activity>
-        <activity android:name=".adapterlayout.AdapterLayoutActivity">
-        </activity>
+        <activity android:name=".customview.CustomViewActivity" />
+        <activity android:name=".progress.ProgressActivity" />
+        <activity android:name=".span.SpanActivity" />
+        <activity android:name=".adapterlayout.AdapterLayoutActivity" />
 
         <receiver android:name=".boot.BootBroadcastReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <activity android:name=".web.WebViewActivity">
-        </activity>
+        <activity android:name=".web.WebViewActivity" />
         <activity android:name=".web.SalesTargetActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.DEFAULT" />
 
                 <data
                     android:host="salestarget"
                     android:path="/viewOrgSalesTarget"
-                    android:scheme="magapp"/>
+                    android:scheme="magapp" />
             </intent-filter>
         </activity>
         <activity
             android:name=".share.ShareTextResultActivity"
             android:launchMode="singleInstance">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.ycf.pda"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.ycf.pda" />
 
-                <action android:name="android.intent.action.SEND"/>
+                <action android:name="android.intent.action.SEND" />
 
-                <data android:mimeType="text/plain"/>
+                <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name=".gesturelock.LockActivity">
-        </activity>
-        <activity android:name=".fingerprint.FingerprintActivity">
-        </activity>
-        <activity android:name=".db.SQLiteActivity">
-        </activity>
-        <activity android:name=".pinnedsection.PinnedSectionActivity">
-        </activity>
-        <activity android:name=".compoundbutton.CompoundButtonActivity">
-        </activity>
-        <activity android:name=".badge.BadgeActivity">
-        </activity>
-        <activity android:name=".hencoder.HenCoderActivity">
-        </activity>
-        <activity android:name=".constraint.ConstraintLayoutActivity">
-        </activity>
-        <activity android:name=".video.VideoActivity">
-        </activity>
-        <activity android:name=".video.TextureViewActivity">
-        </activity>
-        <activity android:name=".snackbar.SnackbarActivity">
-        </activity>
+        <activity android:name=".gesturelock.LockActivity" />
+        <activity android:name=".fingerprint.FingerprintActivity" />
+        <activity android:name=".db.SQLiteActivity" />
+        <activity android:name=".pinnedsection.PinnedSectionActivity" />
+        <activity android:name=".compoundbutton.CompoundButtonActivity" />
+        <activity android:name=".badge.BadgeActivity" />
+        <activity android:name=".hencoder.HenCoderActivity" />
+        <activity android:name=".constraint.ConstraintLayoutActivity" />
+        <activity android:name=".video.VideoActivity" />
+        <activity android:name=".video.TextureViewActivity" />
+        <activity android:name=".snackbar.SnackbarActivity" />
         <activity
             android:name=".dialog.DialogActivity"
-            android:theme="@style/AppTheme.AlertDialog">
-        </activity>
-        <activity android:name=".aidl.AIDLTestActivity">
-        </activity>
+            android:theme="@style/AppTheme.AlertDialog" />
+        <activity android:name=".aidl.AIDLTestActivity" />
 
         <service
             android:name=".aidl.AIDLTestService"
             android:enabled="true"
             android:exported="true"
-            android:process=":remote">
-        </service>
+            android:process=":remote" />
         <service
             android:name=".messenger.MessengerService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true" />
 
-        <activity android:name=".messenger.MessengerClientActivity">
-        </activity>
-        <activity android:name=".snackbar.ToastActivity">
-        </activity>
+        <activity android:name=".messenger.MessengerClientActivity" />
+        <activity android:name=".snackbar.ToastActivity" />
+        <activity android:name=".bluetooth.BluetoothActivity" />
     </application>
 
 </manifest>
